@@ -1,1 +1,1 @@
-# digitalstamp-rally
+# stamp-rally
