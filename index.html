@@ -44,13 +44,13 @@
             <div class="flex flex-col">
                 <h1 class="text-xl font-bold tracking-wider leading-tight">文化祭スタンプラリー</h1>
                 <div class="flex items-center mt-1 space-x-2">
-                    <p class="text-[10px] text-indigo-200">全7箇所（アトラクション5・展示物販2）で特典！</p>
+                    <p class="text-[10px] text-indigo-200">全5箇所（アトラクション4・展示物販1）で特典！</p>
                     <span id="current-time" class="text-[10px] font-mono bg-indigo-800 px-1.5 py-0.5 rounded border border-indigo-500 shadow-inner">00:00:00</span>
                 </div>
             </div>
             <div class="flex items-center bg-indigo-700 px-3 py-1.5 rounded-full border border-indigo-500 shadow-inner shrink-0">
                 <i data-lucide="trophy" class="w-4 h-4 text-yellow-400 mr-1"></i>
-                <span id="header-stamp-count" class="font-bold text-sm">0 / 7</span>
+                <span id="header-stamp-count" class="font-bold text-sm">0 / 5</span>
             </div>
         </header>
 
@@ -101,7 +101,7 @@
                 <div class="flex flex-col items-center mb-6">
                     <h2 class="text-2xl font-bold text-indigo-900 mb-1">スタンプコレクション</h2>
                     <div class="w-16 h-1 bg-indigo-300 rounded-full mb-2"></div>
-                    <p class="text-sm text-slate-500">くじ引きで指定された7箇所を巡って特典GET！</p>
+                    <p class="text-sm text-slate-500">くじ引きで指定された5箇所を巡って特典GET！</p>
                 </div>
                 <div id="stamp-list-container" class="flex flex-col space-y-4"></div>
             </section>
@@ -116,7 +116,7 @@
                             <div class="relative">
                                 <i data-lucide="gift" class="w-16 h-16 mx-auto text-amber-500 mb-3 animate-bounce"></i>
                             </div>
-                            <p class="text-xs font-bold text-amber-600 tracking-widest mb-1">7 SPOTS CLEARED</p>
+                            <p class="text-xs font-bold text-amber-600 tracking-widest mb-1">5 SPOTS CLEARED</p>
                             <h2 class="text-3xl font-black text-indigo-900 mb-6 border-b border-slate-200 pb-4">コンプリート特典</h2>
                             <div class="bg-indigo-50 border border-indigo-100 rounded-2xl p-5 mb-6 shadow-inner">
                                 <p class="font-bold text-indigo-800 text-xl mb-1">模擬店 100円割引券</p>
@@ -139,7 +139,7 @@
                         <i data-lucide="trophy" class="w-10 h-10 text-slate-500"></i>
                     </div>
                     <h2 class="text-2xl font-bold mb-3 tracking-wide">まだ特典はありません</h2>
-                    <p class="text-slate-400 mb-10 text-sm leading-relaxed">くじ引きで指定されたクラスの<br>スタンプを7つ集めよう！</p>
+                    <p class="text-slate-400 mb-10 text-sm leading-relaxed">くじ引きで指定されたクラスの<br>スタンプを5つ集めよう！</p>
                     <button onclick="switchTab('scan')" class="bg-indigo-600 hover:bg-indigo-500 text-white px-10 py-3.5 rounded-full font-bold transition-all shadow-[0_0_15px_rgba(79,70,229,0.3)]">
                         くじ引き・スキャンに戻る
                     </button>
@@ -229,112 +229,7 @@
 
     <script>
         // ==========================================
-        // ★★★ 吉本くんの最新のGASのURLを正しく登録済みです ★★★
-        // ==========================================
-        const GAS_API_URL = "https://script.google.com/macros/s/AKfycbw1jPhVdaKLAvmzqCB-fozTGuCrrFb0sw0gN92kt71bs-B9LHa59nO2Dq_nyko-5sUP/exec"; 
-
-        const SPOTS = [
-            // 高校1年生 (アトラクション) - id: 1~7
-            { id: 1, name: "1年1組", label: "謎解き迷路", type: "1年アトラクション", desc: "高校1年生：謎解き迷路が楽しめるアトラクションスポットです。", mission: "出口にいるスタッフに「脱出成功！」と元気よく伝えよう！" },
-            { id: 2, name: "1年2組", label: "おばけやしき", type: "1年アトラクション", desc: "高校1年生：スリルと恐怖を体験できる本格おばけやしき！", mission: "出口にいるスタッフに「全然怖くなかったよ！」と強がってみよう！" },
-            { id: 3, name: "1年3組", label: "おばけやしき", type: "1年アトラクション", desc: "高校1年生：暗闇に隠された驚きが待つおばけやしきスポット。", mission: "出口にいるスタッフと「おばけポーズ」をしてから帰ろう！" },
-            { id: 4, name: "1年4組", label: "キッキングスナイパー", type: "1年アトラクション", desc: "高校1年生：狙いを定めて蹴り倒すキッキングスナイパー！", mission: "終わった後、スタッフに「ナイスキック！」と声をかけよう！" },
-            { id: 5, name: "1年5組", label: "カジノ", type: "1年アトラクション", desc: "高校1年生：カジノゲームのスリルを安全に楽しめる特設ブース。", mission: "帰る時に、スタッフへ「サンキュー、ディーラー！」と挨拶しよう！" },
-            { id: 6, name: "1年6組", label: "遊園地", type: "1年アトラクション", desc: "高校1年生：楽しいアトラクションが詰まったミニ遊園地エリア。", mission: "遊び終わった後、スタッフに両手で大きく手を振ろう！" },
-            { id: 7, name: "1年7組", label: "アーチ", type: "1年アトラクション", desc: "高校1年生：学校を華やかに彩る記念アーチ・ゲートスポット。", mission: "アーチの近くのスタッフに「文化祭最高！」と声をかけよう！" },
-            
-            // 高校2年生 (物品販売・出展) - id: 8~14
-            { id: 8, name: "2年1組", label: "缶バッジ・チェキ", type: "2年物販・展示", desc: "高校2年生：思い出のチェキ撮影やオリジナル缶バッジを販売！", mission: "スタッフに「おすすめの缶バッジはどれですか？」と聞いてみよう！" },
-            { id: 9, name: "2年2組", label: "ラバーバンド・エコバッグ", type: "2年物販・展示", desc: "高校2年生：お揃いで付けたいラバーバンドと便利なエコバッグ。", mission: "ブースを出る時に、スタッフへ「エコバッグ便利そう！」と声をかけよう！" },
-            { id: 10, name: "2年3組", label: "キーホルダー・ラバーバンド", type: "2年物販・展示", desc: "高校2年生：限定オリジナルデザインのキーホルダーとラバーバンド！", mission: "スタッフに「一番人気のキーホルダーはどれですか？」と質問してみよう！" },
-            { id: 11, name: "2年4組", label: "タオル・ステッカー", type: "2年物販・展示", desc: "高校2年生：マストハブな特製タオルと、どこにでも貼れるステッカー！", mission: "ブースを出る時に、スタッフへ「ステッカー可愛いですね！」と伝えよう！" },
-            { id: 12, name: "2年5組", label: "タオル・目印チャーム", type: "2年物販・展示", desc: "高校2年生：実用的なタオルとお気に入りのバッグに付けたい目印チャーム。", mission: "スタッフに「このタオルのおすすめポイントは？」と聞いてみよう！" },
-            { id: 13, name: "2年6組", label: "ヘアバンド・前髪クリップ", type: "2年物販・展示", desc: "高校2年生：日常でも大活躍する可愛いヘアバンドと前髪クリップ！", mission: "ブースを出る時に、スタッフと笑顔で両手を振り合おう！" },
-            { id: 14, name: "2年7組", label: "缶バッジ・クリアボトル", type: "2年物販・展示", desc: "高校2年生：限定クリアボトルとお気に入りの絵柄の缶バッジ！", mission: "ブースを出る時に、スタッフへ「ボトルおしゃれですね！」と声をかけよう！" }
-        ];
-
-        let stamps = [];
-        let html5QrCode = null; 
-        let isProcessing = false;
-        let isDrawing = false;
-
-        let userName = localStorage.getItem('ichijo_festival_v2_user_name');
-        let ticketUsed = localStorage.getItem('ichijo_festival_v2_ticket_used') === 'true';
-        let currentTargetId = localStorage.getItem('ichijo_festival_v2_target_id') ? parseInt(localStorage.getItem('ichijo_festival_v2_target_id')) : null;
-        
-        // ★ 何周目かを記録する変数を追加！
-        let lapCount = parseInt(localStorage.getItem('ichijo_festival_v2_lap_count') || '1');
-
-        function init() {
-            lucide.createIcons();
-            startClock(); 
-            
-            if (!userName) {
-                document.getElementById('name-input-modal').classList.remove('hidden');
-            } else {
-                completeInit();
-            }
-        }
-
-        // 時計を動かす機能
-        function startClock() {
-            function updateClock() {
-                const now = new Date();
-                const h = String(now.getHours()).padStart(2, '0');
-                const m = String(now.getMinutes()).padStart(2, '0');
-                const s = String(now.getSeconds()).padStart(2, '0');
-                const clockEl = document.getElementById('current-time');
-                if (clockEl) {
-                    clockEl.textContent = `${h}:${m}:${s}`;
-                }
-            }
-            updateClock(); 
-            setInterval(updateClock, 1000);
-        }
-
-        // テストデータのリセット機能
-        function resetTestData() {
-            if (confirm("これまでのスタンプ記録やお名前のデータをすべて消去して、最初からやり直しますか？")) {
-                localStorage.removeItem('ichijo_festival_v2_stamps');
-                localStorage.removeItem('ichijo_festival_v2_user_name');
-                localStorage.removeItem('ichijo_festival_v2_ticket_used');
-                localStorage.removeItem('ichijo_festival_v2_target_id');
-                localStorage.removeItem('ichijo_festival_v2_lap_count');
-                location.reload();
-            }
-        }
-
-        function submitName() {
-            const input = document.getElementById('fullname-input');
-            const nameValue = input.value.trim();
-            const errorElement = document.getElementById('name-validation-error');
-            
-            const hasSpace = nameValue.includes(' ') || nameValue.includes('　');
-            
-            if (nameValue.length < 2 || !hasSpace) {
-                errorElement.classList.remove('hidden');
-                lucide.createIcons();
-                return;
-            }
-            
-            errorElement.classList.add('hidden');
-            userName = nameValue;
-            localStorage.setItem('ichijo_festival_v2_user_name', userName);
-            document.getElementById('name-input-modal').classList.add('hidden');
-            completeInit();
-        }
-
-        function completeInit() {
-            const savedData = localStorage.getItem('ichijo_festival_v2_stamps');
-            if (savedData) {
-                try { stamps = JSON.parse(savedData); } catch (e) { stamps = []; }
-            }
-            updateScanUI();
-            updateAllUI();
-        }
-
-        // ==========================================
-        // ★ くじ引き（アトラクション5個・展示物販2個の割合で引く）
+        // ★ くじ引き（アトラクション4個・展示物販1個の割合で引く）
         // ==========================================
         function drawLottery() {
             if (isDrawing) return;
@@ -343,8 +238,8 @@
             const stampsAttraction = stamps.filter(id => id <= 7);
             const stampsShop = stamps.filter(id => id >= 8);
             
-            const needAttraction = Math.max(0, 5 - stampsAttraction.length);
-            const needShop = Math.max(0, 2 - stampsShop.length);
+            const needAttraction = Math.max(0, 4 - stampsAttraction.length);
+            const needShop = Math.max(0, 1 - stampsShop.length);
             
             if (needAttraction === 0 && needShop === 0) {
                 isDrawing = false;
@@ -406,11 +301,11 @@
             const section = document.getElementById('lottery-section');
             if (!section) return;
 
-            if (stamps.length >= 7) {
+            if (stamps.length >= 5) {
                 section.innerHTML = `
                     <div class="bg-yellow-50 border-4 border-yellow-200 w-full p-6 rounded-3xl flex flex-col items-center justify-center shadow-inner text-center">
                         <i data-lucide="award" class="w-16 h-16 text-yellow-500 mb-2"></i>
-                        <span class="text-xl font-black text-yellow-700">目標の7箇所をクリア！</span>
+                        <span class="text-xl font-black text-yellow-700">目標の5箇所をクリア！</span>
                         <span class="text-sm text-yellow-600 font-bold mt-2">特典画面から割引券をご利用ください</span>
                     </div>
                 `;
@@ -426,12 +321,12 @@
                     <div class="w-full flex justify-around mb-4 bg-white p-3 rounded-2xl shadow-sm border border-slate-100">
                         <div class="text-center">
                             <p class="text-[10px] text-slate-400 font-bold">アトラクション</p>
-                            <p class="text-sm font-black text-indigo-600">${stampsA} / 5</p>
+                            <p class="text-sm font-black text-indigo-600">${stampsA} / 4</p>
                         </div>
                         <div class="w-px bg-slate-200"></div>
                         <div class="text-center">
                             <p class="text-[10px] text-slate-400 font-bold">展示・物販</p>
-                            <p class="text-sm font-black text-rose-500">${stampsB} / 2</p>
+                            <p class="text-sm font-black text-rose-500">${stampsB} / 1</p>
                         </div>
                     </div>
                     <h2 class="text-xl font-bold text-indigo-900 mb-2">次の目的地を決めよう</h2>
@@ -604,7 +499,7 @@
                     totalStamps: stamps.length
                 });
                 
-                if (stamps.length >= 7) {
+                if (stamps.length >= 5) {
                     sendDataToGAS("saveComplete", {
                         userId: userName,
                         totalStamps: stamps.length
@@ -631,12 +526,23 @@
             document.getElementById('ticket-user-name').textContent = displayName;
 
             const count = stamps.length;
-            document.getElementById('header-stamp-count').textContent = `${count} / 7`;
+            document.getElementById('header-stamp-count').textContent = `${count} / 5`;
             const badge = document.getElementById('nav-stamp-badge');
-            if (count > 0) { badge.textContent = count; badge.classList.remove('hidden'); }
+            
+            // ★リセット時に赤いバッジが確実に消えるように修正
+            if (count > 0) { 
+                badge.textContent = count; 
+                badge.classList.remove('hidden'); 
+            } else {
+                badge.classList.add('hidden');
+            }
             
             const ping = document.getElementById('nav-ticket-ping');
-            if (count >= 7) ping.classList.remove('hidden');
+            if (count >= 5) {
+                ping.classList.remove('hidden'); 
+            } else {
+                ping.classList.add('hidden');
+            }
             
             renderStamps();
             updateTicketScreen();
@@ -675,7 +581,7 @@
         }
 
         function updateTicketScreen() {
-            if (stamps.length >= 7) {
+            if (stamps.length >= 5) {
                 document.getElementById('ticket-unlocked').classList.remove('hidden');
                 document.getElementById('ticket-locked').classList.add('hidden');
                 
