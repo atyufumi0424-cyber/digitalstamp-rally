@@ -229,6 +229,15 @@
 
     <script>
         // ==========================================
+        // ★ 学校の通信制限等でフリーズするのを防ぐ安全装置
+        // ==========================================
+        if (typeof lucide === 'undefined') {
+            window.lucide = {
+                createIcons: function() { console.warn("アイコン読み込みスキップ"); }
+            };
+        }
+
+        // ==========================================
         // ★★★ 吉本くんの最新のGASのURLを正しく登録済みです ★★★
         // ==========================================
         const GAS_API_URL = "https://script.google.com/macros/s/AKfycbw1jPhVdaKLAvmzqCB-fozTGuCrrFb0sw0gN92kt71bs-B9LHa59nO2Dq_nyko-5sUP/exec"; 
@@ -265,13 +274,18 @@
         let lapCount = parseInt(localStorage.getItem('ichijo_festival_v3_lap_count') || '1');
 
         function init() {
-            lucide.createIcons();
-            startClock(); 
-            
-            if (!userName) {
-                document.getElementById('name-input-modal').classList.remove('hidden');
-            } else {
-                completeInit();
+            try {
+                lucide.createIcons();
+                startClock(); 
+                
+                if (!userName) {
+                    document.getElementById('name-input-modal').classList.remove('hidden');
+                } else {
+                    completeInit();
+                }
+            } catch (error) {
+                console.error("初期化エラー:", error);
+                document.getElementById('display-user-name').textContent = "エラー発生: リセットしてください";
             }
         }
 
@@ -326,7 +340,10 @@
         function completeInit() {
             const savedData = localStorage.getItem('ichijo_festival_v3_stamps');
             if (savedData) {
-                try { stamps = JSON.parse(savedData); } catch (e) { stamps = []; }
+                try { 
+                    stamps = JSON.parse(savedData); 
+                    if (!Array.isArray(stamps)) stamps = [];
+                } catch (e) { stamps = []; }
             }
             updateAllUI(); // 画面全体を構築して読み込み中を解除
         }
