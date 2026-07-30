@@ -229,6 +229,109 @@
 
     <script>
         // ==========================================
+        // ★★★ 吉本くんの最新のGASのURLを正しく登録済みです ★★★
+        // ==========================================
+        const GAS_API_URL = "https://script.google.com/macros/s/AKfycbw1jPhVdaKLAvmzqCB-fozTGuCrrFb0sw0gN92kt71bs-B9LHa59nO2Dq_nyko-5sUP/exec"; 
+
+        const SPOTS = [
+            // 高校1年生 (アトラクション) - id: 1~7
+            { id: 1, name: "1年1組", label: "謎解き迷路", type: "1年アトラクション", desc: "高校1年生：謎解き迷路が楽しめるアトラクションスポットです。", mission: "出口にいるスタッフに「脱出成功！」と元気よく伝えよう！" },
+            { id: 2, name: "1年2組", label: "おばけやしき", type: "1年アトラクション", desc: "高校1年生：スリルと恐怖を体験できる本格おばけやしき！", mission: "出口にいるスタッフに「全然怖くなかったよ！」と強がってみよう！" },
+            { id: 3, name: "1年3組", label: "おばけやしき", type: "1年アトラクション", desc: "高校1年生：暗闇に隠された驚きが待つおばけやしきスポット。", mission: "出口にいるスタッフと「おばけポーズ」をしてから帰ろう！" },
+            { id: 4, name: "1年4組", label: "キッキングスナイパー", type: "1年アトラクション", desc: "高校1年生：狙いを定めて蹴り倒すキッキングスナイパー！", mission: "終わった後、スタッフに「ナイスキック！」と声をかけよう！" },
+            { id: 5, name: "1年5組", label: "カジノ", type: "1年アトラクション", desc: "高校1年生：カジノゲームのスリルを安全に楽しめる特設ブース。", mission: "帰る時に、スタッフへ「サンキュー、ディーラー！」と挨拶しよう！" },
+            { id: 6, name: "1年6組", label: "遊園地", type: "1年アトラクション", desc: "高校1年生：楽しいアトラクションが詰まったミニ遊園地エリア。", mission: "遊び終わった後、スタッフに両手で大きく手を振ろう！" },
+            { id: 7, name: "1年7組", label: "アーチ", type: "1年アトラクション", desc: "高校1年生：学校を華やかに彩る記念アーチ・ゲートスポット。", mission: "アーチの近くのスタッフに「文化祭最高！」と声をかけよう！" },
+            
+            // 高校2年生 (物品販売・出展) - id: 8~14
+            { id: 8, name: "2年1組", label: "缶バッジ・チェキ", type: "2年物販・展示", desc: "高校2年生：思い出のチェキ撮影やオリジナル缶バッジを販売！", mission: "スタッフに「おすすめの缶バッジはどれですか？」と聞いてみよう！" },
+            { id: 9, name: "2年2組", label: "ラバーバンド・エコバッグ", type: "2年物販・展示", desc: "高校2年生：お揃いで付けたいラバーバンドと便利なエコバッグ。", mission: "ブースを出る時に、スタッフへ「エコバッグ便利そう！」と声をかけよう！" },
+            { id: 10, name: "2年3組", label: "キーホルダー・ラバーバンド", type: "2年物販・展示", desc: "高校2年生：限定オリジナルデザインのキーホルダーとラバーバンド！", mission: "スタッフに「一番人気のキーホルダーはどれですか？」と質問してみよう！" },
+            { id: 11, name: "2年4組", label: "タオル・ステッカー", type: "2年物販・展示", desc: "高校2年生：マストハブな特製タオルと、どこにでも貼れるステッカー！", mission: "ブースを出る時に、スタッフへ「ステッカー可愛いですね！」と伝えよう！" },
+            { id: 12, name: "2年5組", label: "タオル・目印チャーム", type: "2年物販・展示", desc: "高校2年生：実用的なタオルとお気に入りのバッグに付けたい目印チャーム。", mission: "スタッフに「このタオルのおすすめポイントは？」と聞いてみよう！" },
+            { id: 13, name: "2年6組", label: "ヘアバンド・前髪クリップ", type: "2年物販・展示", desc: "高校2年生：日常でも大活躍する可愛いヘアバンドと前髪クリップ！", mission: "ブースを出る時に、スタッフと笑顔で両手を振り合おう！" },
+            { id: 14, name: "2年7組", label: "缶バッジ・クリアボトル", type: "2年物販・展示", desc: "高校2年生：限定クリアボトルとお気に入りの絵柄の缶バッジ！", mission: "ブースを出る時に、スタッフへ「ボトルおしゃれですね！」と声をかけよう！" }
+        ];
+
+        let stamps = [];
+        let html5QrCode = null; 
+        let isProcessing = false;
+        let isDrawing = false;
+
+        // ★ 新しいバージョン(v3)の保存箱に変更して、過去のエラーデータを完全に遮断しました！
+        let userName = localStorage.getItem('ichijo_festival_v3_user_name');
+        let ticketUsed = localStorage.getItem('ichijo_festival_v3_ticket_used') === 'true';
+        let currentTargetId = localStorage.getItem('ichijo_festival_v3_target_id') ? parseInt(localStorage.getItem('ichijo_festival_v3_target_id')) : null;
+        let lapCount = parseInt(localStorage.getItem('ichijo_festival_v3_lap_count') || '1');
+
+        function init() {
+            lucide.createIcons();
+            startClock(); 
+            
+            if (!userName) {
+                document.getElementById('name-input-modal').classList.remove('hidden');
+            } else {
+                completeInit();
+            }
+        }
+
+        // 時計を動かす機能
+        function startClock() {
+            function updateClock() {
+                const now = new Date();
+                const h = String(now.getHours()).padStart(2, '0');
+                const m = String(now.getMinutes()).padStart(2, '0');
+                const s = String(now.getSeconds()).padStart(2, '0');
+                const clockEl = document.getElementById('current-time');
+                if (clockEl) {
+                    clockEl.textContent = `${h}:${m}:${s}`;
+                }
+            }
+            updateClock(); 
+            setInterval(updateClock, 1000);
+        }
+
+        // テストデータのリセット機能
+        function resetTestData() {
+            if (confirm("これまでのスタンプ記録やお名前のデータをすべて消去して、最初からやり直しますか？")) {
+                localStorage.removeItem('ichijo_festival_v3_stamps');
+                localStorage.removeItem('ichijo_festival_v3_user_name');
+                localStorage.removeItem('ichijo_festival_v3_ticket_used');
+                localStorage.removeItem('ichijo_festival_v3_target_id');
+                localStorage.removeItem('ichijo_festival_v3_lap_count');
+                location.reload();
+            }
+        }
+
+        function submitName() {
+            const input = document.getElementById('fullname-input');
+            const nameValue = input.value.trim();
+            const errorElement = document.getElementById('name-validation-error');
+            
+            const hasSpace = nameValue.includes(' ') || nameValue.includes('　');
+            
+            if (nameValue.length < 2 || !hasSpace) {
+                errorElement.classList.remove('hidden');
+                lucide.createIcons();
+                return;
+            }
+            
+            errorElement.classList.add('hidden');
+            userName = nameValue;
+            localStorage.setItem('ichijo_festival_v3_user_name', userName);
+            document.getElementById('name-input-modal').classList.add('hidden');
+            completeInit();
+        }
+
+        function completeInit() {
+            const savedData = localStorage.getItem('ichijo_festival_v3_stamps');
+            if (savedData) {
+                try { stamps = JSON.parse(savedData); } catch (e) { stamps = []; }
+            }
+            updateAllUI(); // 画面全体を構築して読み込み中を解除
+        }
+
+        // ==========================================
         // ★ くじ引き（アトラクション4個・展示物販1個の割合で引く）
         // ==========================================
         function drawLottery() {
@@ -288,7 +391,7 @@
                     
                     setTimeout(() => {
                         currentTargetId = finalSpot.id;
-                        localStorage.setItem('ichijo_festival_v2_target_id', currentTargetId.toString());
+                        localStorage.setItem('ichijo_festival_v3_target_id', currentTargetId.toString());
                         isDrawing = false;
                         updateScanUI();
                     }, 800);
@@ -340,6 +443,15 @@
                 `;
             } else {
                 const target = SPOTS.find(s => s.id === currentTargetId);
+                
+                // ★ もし過去のデータ等でtargetが見つからなかった場合の安全装置
+                if (!target) {
+                    currentTargetId = null;
+                    localStorage.removeItem('ichijo_festival_v3_target_id');
+                    updateScanUI();
+                    return;
+                }
+
                 section.innerHTML = `
                     <h2 class="text-lg font-bold text-indigo-900 mb-1">現在の目的地</h2>
                     <div class="bg-rose-50 border-4 border-rose-200 w-full p-5 rounded-3xl flex flex-col items-center justify-center mb-6 shadow-inner text-center relative overflow-hidden">
@@ -455,7 +567,7 @@
                 return;
             }
 
-            // ★ 2周目以降なら GAS側に「一条 太郎 (2周目)」として送信する魔法の処理
+            // 2周目以降なら GAS側に「一条 太郎 (2周目)」として送信する魔法の処理
             const formattedUserName = lapCount > 1 ? `${userName} (${lapCount}周目)` : userName;
 
             const payload = { 
@@ -484,10 +596,10 @@
             
             if (!alreadyGot) {
                 stamps.push(spot.id);
-                localStorage.setItem('ichijo_festival_v2_stamps', JSON.stringify(stamps));
+                localStorage.setItem('ichijo_festival_v3_stamps', JSON.stringify(stamps));
                 
                 currentTargetId = null;
-                localStorage.removeItem('ichijo_festival_v2_target_id');
+                localStorage.removeItem('ichijo_festival_v3_target_id');
 
                 updateAllUI();
                 openResultModal(spot, 'success');
@@ -520,7 +632,6 @@
         function updateAllUI() {
             if (!userName) return; 
             
-            // ★ 画面上の名前表示にも「(○周目)」を追加
             const displayName = lapCount > 1 ? `${userName} (${lapCount}周目)` : userName;
             document.getElementById('display-user-name').textContent = displayName;
             document.getElementById('ticket-user-name').textContent = displayName;
@@ -529,7 +640,6 @@
             document.getElementById('header-stamp-count').textContent = `${count} / 5`;
             const badge = document.getElementById('nav-stamp-badge');
             
-            // ★リセット時に赤いバッジが確実に消えるように修正
             if (count > 0) { 
                 badge.textContent = count; 
                 badge.classList.remove('hidden'); 
@@ -589,7 +699,6 @@
                 const instruction = document.getElementById('ticket-instruction');
                 
                 if (ticketUsed) {
-                    // ★ 2回目以降に挑戦するボタンに変更
                     instruction.innerHTML = "この特典は利用済みです。<br>もう一度最初から遊ぶことができます！";
                     actionArea.innerHTML = `
                         <div class="bg-slate-200 text-slate-500 py-3 rounded-xl font-bold flex items-center justify-center border-2 border-slate-300 mb-4">
@@ -617,7 +726,7 @@
         function useTicket() {
             if (confirm("特典を利用済みにしますか？\n※必ずスタッフの目の前で「OK」を押してください。取り消しはできません。")) {
                 ticketUsed = true;
-                localStorage.setItem('ichijo_festival_v2_ticket_used', 'true');
+                localStorage.setItem('ichijo_festival_v3_ticket_used', 'true');
                 updateTicketScreen();
             }
         }
@@ -632,16 +741,14 @@
                 currentTargetId = null;
                 lapCount++;
                 
-                // スタンプや特典の進行状況だけを消す（名前は残す）
-                localStorage.removeItem('ichijo_festival_v2_stamps');
-                localStorage.removeItem('ichijo_festival_v2_ticket_used');
-                localStorage.removeItem('ichijo_festival_v2_target_id');
-                // 周回数を記録
-                localStorage.setItem('ichijo_festival_v2_lap_count', lapCount.toString());
+                localStorage.removeItem('ichijo_festival_v3_stamps');
+                localStorage.removeItem('ichijo_festival_v3_ticket_used');
+                localStorage.removeItem('ichijo_festival_v3_target_id');
+                localStorage.setItem('ichijo_festival_v3_lap_count', lapCount.toString());
                 
                 updateAllUI();
                 switchTab('scan');
-                window.scrollTo(0, 0); // 画面を一番上に戻す
+                window.scrollTo(0, 0); 
             }
         }
 
