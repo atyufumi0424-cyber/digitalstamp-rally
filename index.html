@@ -147,6 +147,31 @@
             </section>
         </main>
 
+        <!-- ★ アプリ内ブラウザ・シークレットモード警告モーダル (保存できない環境をブロック) -->
+        <div id="storage-warning-modal" class="hidden absolute inset-0 bg-slate-900/95 backdrop-blur-md z-[9999] flex flex-col items-center justify-center p-6 text-white text-center">
+            <i data-lucide="alert-triangle" class="w-20 h-20 mb-4 text-yellow-400 animate-pulse"></i>
+            <h2 class="text-2xl font-black mb-4 text-yellow-400 tracking-wider">データが保存できない状態です！</h2>
+            <p class="text-sm font-bold mb-6 leading-relaxed">
+                現在のブラウザ環境では、<br>スタンプの記録を保存することができません。<br>（画面を閉じると全て消えてしまいます）
+            </p>
+            
+            <div class="bg-white text-slate-800 p-5 rounded-2xl w-full max-w-sm mb-8 shadow-lg text-left space-y-4">
+                <p class="font-bold text-rose-600 text-sm border-b pb-2">▼ 解決方法（どちらかを行ってください）</p>
+                <div class="flex items-start">
+                    <span class="text-xl mr-3">📱</span>
+                    <p class="text-xs font-bold leading-relaxed">LINEやInstagram等から開いている場合<br><span class="text-slate-500">→ 右下のメニュー(︙)等から「Safariで開く」または「ブラウザで開く」を選んでください。</span></p>
+                </div>
+                <div class="flex items-start">
+                    <span class="text-xl mr-3">🕵️</span>
+                    <p class="text-xs font-bold leading-relaxed">シークレット(プライベート)モードの場合<br><span class="text-slate-500">→ プライベートブラウズを解除して、通常のタブで開き直してください。</span></p>
+                </div>
+            </div>
+
+            <button onclick="document.getElementById('storage-warning-modal').classList.add('hidden')" class="text-[10px] text-white/50 underline bg-transparent px-4 py-2">
+                データが消えてもいいからテストとして進む
+            </button>
+        </div>
+
         <!-- 獲得結果ポップアップ -->
         <div id="result-modal" class="hidden absolute inset-0 bg-slate-900/80 backdrop-blur-sm z-[100] flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
             <div class="bg-white rounded-3xl p-6 w-full max-w-sm text-center shadow-2xl transform scale-95 transition-transform duration-300 relative" id="result-modal-content">
@@ -267,16 +292,55 @@
         let isProcessing = false;
         let isDrawing = false;
 
-        // ★ 新しいバージョン(v3)の保存箱に変更して、過去のエラーデータを完全に遮断しました！
-        let userName = localStorage.getItem('ichijo_festival_v3_user_name');
-        let ticketUsed = localStorage.getItem('ichijo_festival_v3_ticket_used') === 'true';
-        let currentTargetId = localStorage.getItem('ichijo_festival_v3_target_id') ? parseInt(localStorage.getItem('ichijo_festival_v3_target_id')) : null;
-        let lapCount = parseInt(localStorage.getItem('ichijo_festival_v3_lap_count') || '1');
+        // ★ エラーでアプリが真っ白になるのを防ぐ安全な変数取得
+        let userName = null;
+        let ticketUsed = false;
+        let currentTargetId = null;
+        let lapCount = 1;
+
+        try {
+            userName = localStorage.getItem('ichijo_festival_v3_user_name');
+            ticketUsed = localStorage.getItem('ichijo_festival_v3_ticket_used') === 'true';
+            currentTargetId = localStorage.getItem('ichijo_festival_v3_target_id') ? parseInt(localStorage.getItem('ichijo_festival_v3_target_id')) : null;
+            lapCount = parseInt(localStorage.getItem('ichijo_festival_v3_lap_count') || '1');
+        } catch (e) {
+            console.warn("Storageの読み込みに失敗しました。");
+        }
+
+        // ==========================================
+        // ★ 保存できない環境の検知と警告 (LINE内ブラウザ対策)
+        // ==========================================
+        function checkStorageSafety() {
+            let isSafe = true;
+            
+            // 1. In-App Browser（LINE、インスタ等）のチェック
+            const ua = navigator.userAgent || navigator.vendor || window.opera;
+            if (ua.indexOf('Line') > -1 || ua.indexOf('Instagram') > -1 || ua.indexOf('Twitter') > -1 || ua.indexOf('FB') > -1) {
+                isSafe = false;
+            }
+
+            // 2. プライベートモード等で保存機能自体がブロックされていないかテスト
+            try {
+                localStorage.setItem('__test_safety__', '1');
+                localStorage.removeItem('__test_safety__');
+            } catch (e) {
+                isSafe = false;
+            }
+
+            // 安全でない場合は真っ赤な警告画面を強制表示
+            if (!isSafe) {
+                document.getElementById('storage-warning-modal').classList.remove('hidden');
+                if (window.lucide) lucide.createIcons();
+            }
+        }
 
         function init() {
             try {
                 lucide.createIcons();
                 startClock(); 
+                
+                // ★ 起動直後に保存環境をチェック
+                checkStorageSafety();
                 
                 if (!userName) {
                     document.getElementById('name-input-modal').classList.remove('hidden');
@@ -285,7 +349,8 @@
                 }
             } catch (error) {
                 console.error("初期化エラー:", error);
-                document.getElementById('display-user-name').textContent = "エラー発生: リセットしてください";
+                const nameEl = document.getElementById('display-user-name');
+                if(nameEl) nameEl.textContent = "エラー発生: リセットしてください";
             }
         }
 
@@ -308,11 +373,13 @@
         // テストデータのリセット機能
         function resetTestData() {
             if (confirm("これまでのスタンプ記録やお名前のデータをすべて消去して、最初からやり直しますか？")) {
-                localStorage.removeItem('ichijo_festival_v3_stamps');
-                localStorage.removeItem('ichijo_festival_v3_user_name');
-                localStorage.removeItem('ichijo_festival_v3_ticket_used');
-                localStorage.removeItem('ichijo_festival_v3_target_id');
-                localStorage.removeItem('ichijo_festival_v3_lap_count');
+                try {
+                    localStorage.removeItem('ichijo_festival_v3_stamps');
+                    localStorage.removeItem('ichijo_festival_v3_user_name');
+                    localStorage.removeItem('ichijo_festival_v3_ticket_used');
+                    localStorage.removeItem('ichijo_festival_v3_target_id');
+                    localStorage.removeItem('ichijo_festival_v3_lap_count');
+                } catch(e) {}
                 location.reload();
             }
         }
@@ -332,18 +399,24 @@
             
             errorElement.classList.add('hidden');
             userName = nameValue;
-            localStorage.setItem('ichijo_festival_v3_user_name', userName);
+            try {
+                localStorage.setItem('ichijo_festival_v3_user_name', userName);
+            } catch(e) {
+                console.warn("保存に失敗しました");
+            }
             document.getElementById('name-input-modal').classList.add('hidden');
             completeInit();
         }
 
         function completeInit() {
-            const savedData = localStorage.getItem('ichijo_festival_v3_stamps');
-            if (savedData) {
-                try { 
+            try {
+                const savedData = localStorage.getItem('ichijo_festival_v3_stamps');
+                if (savedData) {
                     stamps = JSON.parse(savedData); 
                     if (!Array.isArray(stamps)) stamps = [];
-                } catch (e) { stamps = []; }
+                }
+            } catch (e) { 
+                stamps = []; 
             }
             updateAllUI(); // 画面全体を構築して読み込み中を解除
         }
@@ -408,7 +481,9 @@
                     
                     setTimeout(() => {
                         currentTargetId = finalSpot.id;
-                        localStorage.setItem('ichijo_festival_v3_target_id', currentTargetId.toString());
+                        try {
+                            localStorage.setItem('ichijo_festival_v3_target_id', currentTargetId.toString());
+                        } catch(e) {}
                         isDrawing = false;
                         updateScanUI();
                     }, 800);
@@ -464,7 +539,7 @@
                 // ★ もし過去のデータ等でtargetが見つからなかった場合の安全装置
                 if (!target) {
                     currentTargetId = null;
-                    localStorage.removeItem('ichijo_festival_v3_target_id');
+                    try { localStorage.removeItem('ichijo_festival_v3_target_id'); } catch(e){}
                     updateScanUI();
                     return;
                 }
@@ -584,7 +659,6 @@
                 return;
             }
 
-            // 2周目以降なら GAS側に「一条 太郎 (2周目)」として送信する魔法の処理
             const formattedUserName = lapCount > 1 ? `${userName} (${lapCount}周目)` : userName;
 
             const payload = { 
@@ -613,10 +687,11 @@
             
             if (!alreadyGot) {
                 stamps.push(spot.id);
-                localStorage.setItem('ichijo_festival_v3_stamps', JSON.stringify(stamps));
-                
-                currentTargetId = null;
-                localStorage.removeItem('ichijo_festival_v3_target_id');
+                try {
+                    localStorage.setItem('ichijo_festival_v3_stamps', JSON.stringify(stamps));
+                    currentTargetId = null;
+                    localStorage.removeItem('ichijo_festival_v3_target_id');
+                } catch(e){}
 
                 updateAllUI();
                 openResultModal(spot, 'success');
@@ -650,25 +725,33 @@
             if (!userName) return; 
             
             const displayName = lapCount > 1 ? `${userName} (${lapCount}周目)` : userName;
-            document.getElementById('display-user-name').textContent = displayName;
-            document.getElementById('ticket-user-name').textContent = displayName;
+            const nameEl = document.getElementById('display-user-name');
+            const ticketNameEl = document.getElementById('ticket-user-name');
+            
+            if(nameEl) nameEl.textContent = displayName;
+            if(ticketNameEl) ticketNameEl.textContent = displayName;
 
             const count = stamps.length;
-            document.getElementById('header-stamp-count').textContent = `${count} / 5`;
-            const badge = document.getElementById('nav-stamp-badge');
+            const countEl = document.getElementById('header-stamp-count');
+            if(countEl) countEl.textContent = `${count} / 5`;
             
-            if (count > 0) { 
-                badge.textContent = count; 
-                badge.classList.remove('hidden'); 
-            } else {
-                badge.classList.add('hidden');
+            const badge = document.getElementById('nav-stamp-badge');
+            if (badge) {
+                if (count > 0) { 
+                    badge.textContent = count; 
+                    badge.classList.remove('hidden'); 
+                } else {
+                    badge.classList.add('hidden');
+                }
             }
             
             const ping = document.getElementById('nav-ticket-ping');
-            if (count >= 5) {
-                ping.classList.remove('hidden'); 
-            } else {
-                ping.classList.add('hidden');
+            if (ping) {
+                if (count >= 5) {
+                    ping.classList.remove('hidden'); 
+                } else {
+                    ping.classList.add('hidden');
+                }
             }
             
             renderStamps();
@@ -678,6 +761,7 @@
 
         function renderStamps() {
             const container = document.getElementById('stamp-list-container');
+            if(!container) return;
             container.innerHTML = ''; 
             SPOTS.forEach((spot, index) => {
                 const isStamped = stamps.includes(spot.id);
@@ -704,7 +788,7 @@
                 `;
                 container.appendChild(card);
             });
-            lucide.createIcons();
+            if(window.lucide) lucide.createIcons();
         }
 
         function updateTicketScreen() {
@@ -733,7 +817,7 @@
                         </button>
                     `;
                 }
-                lucide.createIcons();
+                if(window.lucide) lucide.createIcons();
             } else {
                 document.getElementById('ticket-unlocked').classList.add('hidden');
                 document.getElementById('ticket-locked').classList.remove('hidden');
@@ -743,7 +827,7 @@
         function useTicket() {
             if (confirm("特典を利用済みにしますか？\n※必ずスタッフの目の前で「OK」を押してください。取り消しはできません。")) {
                 ticketUsed = true;
-                localStorage.setItem('ichijo_festival_v3_ticket_used', 'true');
+                try { localStorage.setItem('ichijo_festival_v3_ticket_used', 'true'); } catch(e){}
                 updateTicketScreen();
             }
         }
@@ -758,10 +842,12 @@
                 currentTargetId = null;
                 lapCount++;
                 
-                localStorage.removeItem('ichijo_festival_v3_stamps');
-                localStorage.removeItem('ichijo_festival_v3_ticket_used');
-                localStorage.removeItem('ichijo_festival_v3_target_id');
-                localStorage.setItem('ichijo_festival_v3_lap_count', lapCount.toString());
+                try {
+                    localStorage.removeItem('ichijo_festival_v3_stamps');
+                    localStorage.removeItem('ichijo_festival_v3_ticket_used');
+                    localStorage.removeItem('ichijo_festival_v3_target_id');
+                    localStorage.setItem('ichijo_festival_v3_lap_count', lapCount.toString());
+                } catch(e){}
                 
                 updateAllUI();
                 switchTab('scan');
@@ -800,7 +886,7 @@
             const content = document.getElementById('result-modal-content');
             modal.classList.remove('hidden');
             setTimeout(() => { modal.classList.remove('opacity-0'); content.classList.remove('scale-95'); }, 10);
-            lucide.createIcons();
+            if(window.lucide) lucide.createIcons();
         }
 
         function closeResultModal() {
