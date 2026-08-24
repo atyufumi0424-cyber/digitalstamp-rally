@@ -404,20 +404,22 @@
         // ==========================================
         // ★ くじ引き（アトラクション4個・展示物販1個の割合で引く）
         // ==========================================
-        function drawLottery() {
-            if (isDrawing) return;
-            isDrawing = true;
-            
-            const stampsAttraction = stamps.filter(id => id <= 7);
-            const stampsShop = stamps.filter(id => id >= 8);
-            
-            const needAttraction = Math.max(0, 4 - stampsAttraction.length);
-            const needShop = Math.max(0, 1 - stampsShop.length);
-            
-            if (needAttraction === 0 && needShop === 0) {
-                isDrawing = false;
-                updateScanUI();
-                return;
+       function sendDataToGAS(spotName) {
+    const GAS_URL = "ここにGASのウェブアプリURLを貼る"; 
+
+    const payload = {
+        userName: userName,
+        spotName: spotName,
+        lapCount: lapCount
+    };
+
+    fetch(GAS_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+    }).catch(err => console.error("送信エラー:", err));
+}rn;
             }
             
             let targetGenre = '';
