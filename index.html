@@ -44,13 +44,13 @@
             <div class="flex flex-col">
                 <h1 class="text-xl font-bold tracking-wider leading-tight">文化祭スタンプラリー</h1>
                 <div class="flex items-center mt-1 space-x-2">
-                    <p class="text-[10px] text-indigo-200">全5箇所（アトラクション4・展示物販1）で特典！</p>
+                    <p class="text-[10px] text-indigo-200">全14箇所（アトラクション7・展示物販7）で特典！</p>
                     <span id="current-time" class="text-[10px] font-mono bg-indigo-800 px-1.5 py-0.5 rounded border border-indigo-500 shadow-inner">00:00:00</span>
                 </div>
             </div>
             <div class="flex items-center bg-indigo-700 px-3 py-1.5 rounded-full border border-indigo-500 shadow-inner shrink-0">
                 <i data-lucide="trophy" class="w-4 h-4 text-yellow-400 mr-1"></i>
-                <span id="header-stamp-count" class="font-bold text-sm">0 / 5</span>
+                <span id="header-stamp-count" class="font-bold text-sm">0 / 14</span>
             </div>
         </header>
 
@@ -101,7 +101,7 @@
                 <div class="flex flex-col items-center mb-6">
                     <h2 class="text-2xl font-bold text-indigo-900 mb-1">スタンプコレクション</h2>
                     <div class="w-16 h-1 bg-indigo-300 rounded-full mb-2"></div>
-                    <p class="text-sm text-slate-500">くじ引きで指定された5箇所を巡って特典GET！</p>
+                    <p class="text-sm text-slate-500">くじ引きで指定された14箇所を巡って特典GET！</p>
                 </div>
                 <div id="stamp-list-container" class="flex flex-col space-y-4"></div>
             </section>
@@ -116,7 +116,7 @@
                             <div class="relative">
                                 <i data-lucide="gift" class="w-16 h-16 mx-auto text-amber-500 mb-3 animate-bounce"></i>
                             </div>
-                            <p class="text-xs font-bold text-amber-600 tracking-widest mb-1">5 SPOTS CLEARED</p>
+                            <p class="text-xs font-bold text-amber-600 tracking-widest mb-1">14 SPOTS CLEARED</p>
                             <h2 class="text-3xl font-black text-indigo-900 mb-6 border-b border-slate-200 pb-4">コンプリート特典</h2>
                             <div class="bg-indigo-50 border border-indigo-100 rounded-2xl p-5 mb-6 shadow-inner">
                                 <p class="font-bold text-indigo-800 text-xl mb-1">模擬店 100円割引券</p>
@@ -139,7 +139,7 @@
                         <i data-lucide="trophy" class="w-10 h-10 text-slate-500"></i>
                     </div>
                     <h2 class="text-2xl font-bold mb-3 tracking-wide">まだ特典はありません</h2>
-                    <p class="text-slate-400 mb-10 text-sm leading-relaxed">くじ引きで指定されたクラスの<br>スタンプを5つ集めよう！</p>
+                    <p class="text-slate-400 mb-10 text-sm leading-relaxed">くじ引きで指定されたクラスの<br>スタンプを14個集めよう！</p>
                     <button onclick="switchTab('scan')" class="bg-indigo-600 hover:bg-indigo-500 text-white px-10 py-3.5 rounded-full font-bold transition-all shadow-[0_0_15px_rgba(79,70,229,0.3)]">
                         くじ引き・スキャンに戻る
                     </button>
@@ -173,7 +173,7 @@
             </div>
         </div>
 
-        <!-- プレイ前確認モーダル（追加部分） -->
+        <!-- プレイ前確認モーダル -->
         <div id="welcome-confirm-modal" class="hidden absolute inset-0 bg-slate-900/95 backdrop-blur-md z-[6000] flex items-center justify-center p-4">
             <div class="bg-white rounded-3xl p-6 w-full max-w-sm text-center shadow-2xl animate-fade-in-up">
                 <div class="w-16 h-16 bg-rose-100 rounded-full flex items-center justify-center mx-auto mb-4 text-rose-600">
@@ -299,7 +299,6 @@
         let isProcessing = false;
         let isDrawing = false;
 
-        // ★ 一番安定していた初期の保存方式とキー名に完全に戻しました（余計な安全装置を解除）
         let userName = localStorage.getItem('ichijo_festival_user_name');
         let ticketUsed = localStorage.getItem('ichijo_festival_ticket_used') === 'true';
         let currentTargetId = localStorage.getItem('ichijo_festival_target_id') ? parseInt(localStorage.getItem('ichijo_festival_target_id')) : null;
@@ -310,14 +309,12 @@
             startClock(); 
             
             if (!userName) {
-                // 名前入力の前に、必ず確認モーダルを表示
                 document.getElementById('welcome-confirm-modal').classList.remove('hidden');
             } else {
                 completeInit();
             }
         }
 
-        // チェックボックスの状態に応じてボタンの見た目と押せる状態を切り替える
         function toggleConfirmBtn() {
             const isChecked = document.getElementById('browser-check').checked;
             const btn = document.getElementById('confirm-next-btn');
@@ -332,14 +329,12 @@
             }
         }
 
-        // 確認完了後にお名前入力へ進む
         function goToNameInput() {
             document.getElementById('welcome-confirm-modal').classList.add('hidden');
             document.getElementById('name-input-modal').classList.remove('hidden');
             if (window.lucide) lucide.createIcons();
         }
 
-        // 時計を動かす機能
         function startClock() {
             function updateClock() {
                 const now = new Date();
@@ -355,7 +350,6 @@
             setInterval(updateClock, 1000);
         }
 
-        // テストデータのリセット機能
         function resetTestData() {
             if (confirm("これまでのスタンプ記録やお名前のデータをすべて消去して、最初からやり直しますか？")) {
                 localStorage.removeItem('ichijo_festival_stamps');
@@ -372,7 +366,7 @@
             const nameValue = input.value.trim();
             const errorElement = document.getElementById('name-validation-error');
             
-            const hasSpace = nameValue.includes(' ') || nameValue.includes('　');
+            const hasSpace = nameValue.includes(' ') || nameValue.includes(' ');
             
             if (nameValue.length < 2 || !hasSpace) {
                 errorElement.classList.remove('hidden');
@@ -383,7 +377,6 @@
             errorElement.classList.add('hidden');
             userName = nameValue;
             
-            // 入力されたお名前を保存
             localStorage.setItem('ichijo_festival_user_name', userName);
             
             document.getElementById('name-input-modal').classList.add('hidden');
@@ -398,49 +391,21 @@
                     if (!Array.isArray(stamps)) stamps = [];
                 } catch (e) { stamps = []; }
             }
-            updateAllUI(); // 画面全体を構築して読み込み中を解除
+            updateAllUI();
         }
 
-        // ==========================================
-        // ★ くじ引き（アトラクション4個・展示物販1個の割合で引く）
-        // ==========================================
         function drawLottery() {
             if (isDrawing) return;
             isDrawing = true;
             
-            const stampsAttraction = stamps.filter(id => id <= 7);
-            const stampsShop = stamps.filter(id => id >= 8);
+            const candidateSpots = SPOTS.filter(s => !stamps.includes(s.id));
             
-            const needAttraction = Math.max(0, 4 - stampsAttraction.length);
-            const needShop = Math.max(0, 1 - stampsShop.length);
-            
-            if (needAttraction === 0 && needShop === 0) {
+            if (candidateSpots.length === 0) {
                 isDrawing = false;
                 updateScanUI();
                 return;
             }
             
-            let targetGenre = '';
-            if (needAttraction === 0) {
-                targetGenre = 'SHOP';
-            } else if (needShop === 0) {
-                targetGenre = 'ATTRACTION';
-            } else {
-                const r = Math.random() * (needAttraction + needShop);
-                targetGenre = (r < needAttraction) ? 'ATTRACTION' : 'SHOP';
-            }
-            
-            let candidateSpots = [];
-            if (targetGenre === 'ATTRACTION') {
-                candidateSpots = SPOTS.filter(s => s.id <= 7 && !stamps.includes(s.id));
-            } else {
-                candidateSpots = SPOTS.filter(s => s.id >= 8 && !stamps.includes(s.id));
-            }
-            
-            if (candidateSpots.length === 0) {
-                candidateSpots = SPOTS.filter(s => !stamps.includes(s.id));
-            }
-
             const finalSpot = candidateSpots[Math.floor(Math.random() * candidateSpots.length)];
             const allAvailableSpots = SPOTS.filter(s => !stamps.includes(s.id));
 
@@ -469,16 +434,15 @@
             }, 80);
         }
 
-        // スキャン画面・くじ引き画面の表示切替
         function updateScanUI() {
             const section = document.getElementById('lottery-section');
             if (!section) return;
 
-            if (stamps.length >= 5) {
+            if (stamps.length >= 14) {
                 section.innerHTML = `
                     <div class="bg-yellow-50 border-4 border-yellow-200 w-full p-6 rounded-3xl flex flex-col items-center justify-center shadow-inner text-center">
                         <i data-lucide="award" class="w-16 h-16 text-yellow-500 mb-2"></i>
-                        <span class="text-xl font-black text-yellow-700">目標の5箇所をクリア！</span>
+                        <span class="text-xl font-black text-yellow-700">目標の14箇所をコンプリート！</span>
                         <span class="text-sm text-yellow-600 font-bold mt-2">特典画面から割引券をご利用ください</span>
                     </div>
                 `;
@@ -494,15 +458,15 @@
                     <div class="w-full flex justify-around mb-4 bg-white p-3 rounded-2xl shadow-sm border border-slate-100">
                         <div class="text-center">
                             <p class="text-[10px] text-slate-400 font-bold">アトラクション</p>
-                            <p class="text-sm font-black text-indigo-600">${stampsA} / 4</p>
+                            <p class="text-sm font-black text-indigo-600">${stampsA} / 7</p>
                         </div>
                         <div class="w-px bg-slate-200"></div>
                         <div class="text-center">
                             <p class="text-[10px] text-slate-400 font-bold">展示・物販</p>
-                            <p class="text-sm font-black text-rose-500">${stampsB} / 1</p>
+                            <p class="text-sm font-black text-rose-500">${stampsB} / 7</p>
                         </div>
                     </div>
-                    <h2 class="text-xl font-bold text-indigo-900 mb-2">次の目的地を決めよう</h2>
+                    <h2 class="text-xl font-bold text-indigo-900 mb-2">次の目的地を決める</h2>
                     <p class="text-xs text-slate-500 text-center mb-6">くじ引きで出たクラスに行って<br/>スタンプを集めてください！</p>
                     <div id="lottery-display" class="bg-white border-4 border-indigo-200 w-full h-24 rounded-2xl flex items-center justify-center text-3xl font-black text-indigo-300 mb-6 shadow-inner tracking-widest">
                         ？？？
@@ -513,160 +477,99 @@
                 `;
             } else {
                 const target = SPOTS.find(s => s.id === currentTargetId);
-                
-                // 万が一保存データが壊れていた場合
-                if (!target) {
-                    currentTargetId = null;
-                    localStorage.removeItem('ichijo_festival_target_id');
-                    updateScanUI();
-                    return;
-                }
-
-                section.innerHTML = `
-                    <h2 class="text-lg font-bold text-indigo-900 mb-1">現在の目的地</h2>
-                    <div class="bg-rose-50 border-4 border-rose-200 w-full p-5 rounded-3xl flex flex-col items-center justify-center mb-6 shadow-inner text-center relative overflow-hidden">
-                        <div class="absolute top-0 left-0 w-full h-2 bg-rose-400"></div>
-                        <span class="bg-rose-600 text-white font-black text-xs px-3 py-1 rounded-full mb-3">${target.name}</span>
-                        <span class="text-2xl font-black text-rose-900 leading-tight">${target.label}</span>
-                        <span class="text-xs text-rose-700 font-bold mt-2">${target.desc}</span>
-                        
-                        <div class="mt-4 w-full bg-white border-2 border-rose-100 rounded-xl p-3 shadow-sm">
-                            <div class="flex items-center justify-center space-x-1 mb-1">
-                                <i data-lucide="flame" class="w-4 h-4 text-rose-500"></i>
-                                <p class="text-[10px] font-black text-rose-500 tracking-wider">クラスミッション</p>
+                if (target) {
+                    section.innerHTML = `
+                        <h2 class="text-xl font-bold text-indigo-900 mb-2">次の目的地</h2>
+                        <div class="bg-white border-4 border-indigo-500 w-full p-6 rounded-2xl mb-6 shadow-md text-center">
+                            <span class="inline-block bg-indigo-100 text-indigo-800 text-[10px] font-bold px-2 py-1 rounded-full mb-2">${target.type}</span>
+                            <p class="text-3xl font-black text-indigo-700 tracking-wider">${target.name}</p>
+                            <p class="text-sm font-bold text-slate-600 mt-1">${target.label}</p>
+                            <div class="mt-4 pt-4 border-t border-slate-100 text-left">
+                                <p class="text-[10px] text-slate-400 font-bold mb-1">ミッション：</p>
+                                <p class="text-xs text-slate-700 font-bold">${target.mission}</p>
                             </div>
-                            <p class="text-sm font-bold text-slate-700">${target.mission}</p>
                         </div>
-                    </div>
-                    <button onclick="startScanner()" class="group relative bg-indigo-600 text-white w-40 h-40 rounded-full flex flex-col items-center justify-center shadow-[0_10px_25px_rgba(79,70,229,0.4)] hover:-translate-y-1 transition-all duration-300 border-4 border-indigo-300 shrink-0">
-                        <i data-lucide="scan" class="w-12 h-12 mb-2 group-hover:scale-110 transition-transform duration-300"></i>
-                        <span class="font-bold text-lg">カメラ起動</span>
-                    </button>
-                    <p class="text-xs text-slate-400 font-bold mt-4 text-center">※ミッションをクリアしたら<br>クラスのQRコードを読み取ろう！</p>
-                `;
+                        <p class="text-xs text-slate-500 mb-4 font-bold text-center">目的地に着いたらカメラを起動して<br>スタッフが持つQRコードを読み取ってね！</p>
+                        <button onclick="startScanner()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-4 rounded-xl font-bold text-lg shadow-lg transition-all flex items-center justify-center animate-pulse-soft border-b-4 border-indigo-800 active:translate-y-1 active:border-b-0">
+                            <i data-lucide="camera" class="w-6 h-6 mr-2"></i>カメラを起動してQRを読み取る
+                        </button>
+                        <button onclick="cancelTarget()" class="w-full mt-4 text-xs text-slate-400 hover:text-slate-600 underline">
+                            違うくじを引き直す
+                        </button>
+                    `;
+                }
             }
-            if (window.lucide) lucide.createIcons();
+            if(window.lucide) lucide.createIcons();
         }
 
-        // ==========================================
-        // カメラ制御・判定処理
-        // ==========================================
+        // くじを引き直すための機能
+        function cancelTarget() {
+            if (confirm("今の目的地をキャンセルしてくじを引き直しますか？")) {
+                currentTargetId = null;
+                localStorage.removeItem('ichijo_festival_target_id');
+                updateScanUI();
+            }
+        }
+
         function startScanner() {
             document.getElementById('start-ui').classList.add('hidden');
             document.getElementById('scanner-ui').classList.remove('hidden');
             document.getElementById('scanner-ui').classList.add('flex');
-            document.getElementById('scan-error-msg').classList.add('hidden');
-            isProcessing = false;
             
             html5QrCode = new Html5Qrcode("qr-reader");
+            const config = { fps: 10, qrbox: { width: 200, height: 200 }, aspectRatio: 1.0 };
             
-            html5QrCode.start(
-                { facingMode: "environment" },
-                { fps: 10, qrbox: { width: 220, height: 220 } },
-                (decodedText) => processScanResult(decodedText),
-                (errorMessage) => {} 
-            ).catch((err) => {
-                console.warn("背面カメラ起動失敗。内カメラ等で再試行します:", err);
-                html5QrCode.start(
-                    { facingMode: "user" },
-                    { fps: 10, qrbox: { width: 220, height: 220 } },
-                    (decodedText) => processScanResult(decodedText),
-                    (errorMessage) => {}
-                ).catch((err2) => {
-                    console.error("Camera start error:", err2);
-                    stopScanner();
-                    showScanError("カメラを起動できませんでした。<br>ブラウザの権限設定を見直してください。");
+            html5QrCode.start({ facingMode: "environment" }, config, onScanSuccess)
+                .catch(err => {
+                    document.getElementById('scanner-ui').classList.add('hidden');
+                    document.getElementById('scanner-ui').classList.remove('flex');
+                    document.getElementById('start-ui').classList.remove('hidden');
+                    alert("カメラの起動に失敗しました。ブラウザのカメラ権限を許可してください。");
                 });
-            });
         }
 
         function stopScanner() {
             if (html5QrCode) {
                 html5QrCode.stop().then(() => {
                     html5QrCode.clear();
-                    html5QrCode = null;
+                    document.getElementById('scanner-ui').classList.add('hidden');
+                    document.getElementById('scanner-ui').classList.remove('flex');
+                    document.getElementById('start-ui').classList.remove('hidden');
                 }).catch(err => console.error(err));
             }
-            document.getElementById('scanner-ui').classList.add('hidden');
-            document.getElementById('scanner-ui').classList.remove('flex');
-            document.getElementById('start-ui').classList.remove('hidden');
-            updateScanUI(); 
         }
 
-        function processScanResult(decodedText) {
+        function onScanSuccess(decodedText) {
             if (isProcessing) return;
-            const match = decodedText.match(/^ICHIJO_SPOT_(\d+)$/);
+            isProcessing = true;
+            stopScanner();
             
-            if (match) {
-                const spotId = parseInt(match[1]);
-                
-                if (currentTargetId !== null) {
-                    if (spotId === currentTargetId) {
-                        const spot = SPOTS.find(s => s.id === spotId);
-                        if (spot) {
-                            isProcessing = true;
-                            stopScanner();
-                            handleStampSuccess(spot);
-                        } else {
-                            showScanError("登録されていないQRコードです。");
-                        }
-                    } else {
-                        showScanError("目的地のクラスではありません！<br>指定されたクラスのQRコードを読んでください。");
-                    }
+            const spotId = parseInt(decodedText);
+            const spot = SPOTS.find(s => s.id === spotId);
+            
+            if (spot) {
+                if (spotId !== currentTargetId) {
+                    openResultModal(spot, 'wrong_target');
+                    isProcessing = false;
                 } else {
-                    stopScanner();
-                    showScanError("目的地が設定されていません。<br>まずはくじを引いてください。");
+                    handleStampSuccess(spot);
                 }
             } else {
-                showScanError("専用のQRコードではありません。");
+                alert("文化祭用の正しいQRコードではありません。");
+                isProcessing = false;
             }
         }
 
-        function showScanError(msg) {
-            const errorContainer = document.getElementById('scan-error-msg');
-            document.getElementById('scan-error-text').innerHTML = `<i data-lucide="alert-circle" class="w-4 h-4 inline mr-1 -mt-1"></i>${msg}`;
-            errorContainer.classList.remove('hidden');
-            if (window.lucide) lucide.createIcons();
-            setTimeout(() => { errorContainer.classList.add('hidden'); }, 5000);
-        }
-
-        // データ送信処理
         function sendDataToGAS(action, data) {
-            if (!GAS_API_URL || GAS_API_URL.includes("ここにGAS")) {
-                console.warn("GAS_API_URL が設定されていません。");
-                return;
-            }
-
-            const formattedUserName = lapCount > 1 ? `${userName} (${lapCount}周目)` : userName;
-
-            const payload = { 
-                action: action, 
-                userName: formattedUserName, 
-                ...data 
-            };
-
-            try {
-                const queryString = Object.keys(payload)
-                    .map(key => key + '=' + encodeURIComponent(payload[key]))
-                    .join('&');
-                const urlWithParams = GAS_API_URL + '?' + queryString;
-
-                const img = new Image();
-                img.src = urlWithParams;
-
-                console.log("データ送信完了:", payload);
-            } catch (error) {
-                console.error("送信エラー:", error);
-            }
+            // no-cors を使用し、非同期でGASへデータを送信（画面遷移・閉じる際のエラー防止用）
+            const url = GAS_API_URL + "?action=" + action + "&" + new URLSearchParams(data).toString();
+            fetch(url, { mode: 'no-cors' }).catch(e => console.log(e));
         }
 
         function handleStampSuccess(spot) {
             const alreadyGot = stamps.includes(spot.id);
-            
             if (!alreadyGot) {
                 stamps.push(spot.id);
-                
-                // スタンプを保存して目的地をリセット
                 localStorage.setItem('ichijo_festival_stamps', JSON.stringify(stamps));
                 currentTargetId = null;
                 localStorage.removeItem('ichijo_festival_target_id');
@@ -681,22 +584,18 @@
                     totalStamps: stamps.length
                 });
                 
-                if (stamps.length >= 5) {
+                if (stamps.length >= 14) {
                     sendDataToGAS("saveComplete", {
                         userId: userName,
                         totalStamps: stamps.length
                     });
-
                     setTimeout(() => {
                         closeResultModal();
                         switchTab('ticket');
                     }, 2500);
-                } else {
-                    updateScanUI();
                 }
-            } else {
-                openResultModal(spot, 'already');
             }
+            isProcessing = false;
         }
 
         function updateAllUI() {
@@ -711,7 +610,7 @@
 
             const count = stamps.length;
             const countEl = document.getElementById('header-stamp-count');
-            if(countEl) countEl.textContent = `${count} / 5`;
+            if(countEl) countEl.textContent = `${count} / 14`;
             
             const badge = document.getElementById('nav-stamp-badge');
             if (badge) {
@@ -725,7 +624,7 @@
             
             const ping = document.getElementById('nav-ticket-ping');
             if (ping) {
-                if (count >= 5) {
+                if (count >= 14) {
                     ping.classList.remove('hidden'); 
                 } else {
                     ping.classList.add('hidden');
@@ -740,37 +639,48 @@
         function renderStamps() {
             const container = document.getElementById('stamp-list-container');
             if(!container) return;
-            container.innerHTML = ''; 
-            SPOTS.forEach((spot, index) => {
-                const isStamped = stamps.includes(spot.id);
-                const card = document.createElement('div');
-                card.className = `flex items-center p-4 rounded-2xl border transition-all duration-300 ${isStamped ? 'bg-white border-indigo-200 shadow-md transform hover:-translate-y-1' : 'bg-slate-50 border-slate-200 border-dashed'}`;
+            container.innerHTML = '';
+            
+            SPOTS.forEach(spot => {
+                const isGot = stamps.includes(spot.id);
+                const isTarget = currentTargetId === spot.id;
                 
-                const gradeStr = spot.name.split('年')[0] + '年生';
-                const classStr = spot.name.split('年')[1];
-
-                card.innerHTML = `
-                    <div class="relative w-16 h-16 rounded-full flex flex-col items-center justify-center mr-4 flex-shrink-0 transition-all ${isStamped ? 'bg-indigo-50 text-indigo-900 border-2 border-indigo-200 font-bold' : 'bg-slate-200 opacity-40 border-2 border-slate-300'}">
-                        <span class="text-xs font-black leading-tight">${gradeStr}</span>
-                        <span class="text-[9px] font-bold leading-none mt-0.5">${classStr}</span>
-                        ${!isStamped ? `<span class="absolute text-[8px] font-bold text-slate-500 -bottom-1.5 bg-white px-1.5 rounded-full border border-slate-200">No.${spot.id}</span>` : ''}
-                    </div>
-                    <div class="flex-1 min-w-0">
-                        <span class="text-[9px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-500">${spot.type}</span>
-                        <h3 class="font-extrabold text-base truncate mt-1 ${isStamped ? 'text-indigo-900' : 'text-slate-400'}">${spot.label}</h3>
-                        <p class="text-xs mt-0.5 line-clamp-2 ${isStamped ? 'text-slate-600' : 'text-slate-400'}">${isStamped ? spot.desc : 'まだスキャンしていません'}</p>
-                    </div>
-                    <div class="w-8 flex justify-end">
-                        ${isStamped ? `<div class="w-7 h-7 rounded-full bg-green-500 text-white flex items-center justify-center shadow-sm"><i data-lucide="check" class="w-4 h-4 text-white font-bold"></i></div>` : `<div class="w-7 h-7 rounded-full border-2 border-slate-200"></div>`}
+                let statusBadge = '';
+                let opacityClass = 'opacity-50 grayscale';
+                let iconColor = 'text-slate-300';
+                
+                if (isGot) {
+                    statusBadge = `<span class="bg-red-500 text-white text-[10px] font-bold px-2 py-1 rounded-full shadow-sm">獲得済</span>`;
+                    opacityClass = 'opacity-100 bg-white border-red-200 border-2 shadow-sm';
+                    iconColor = 'text-red-500';
+                } else if (isTarget) {
+                    statusBadge = `<span class="bg-indigo-600 text-white text-[10px] font-bold px-2 py-1 rounded-full shadow-sm animate-pulse">目的地</span>`;
+                    opacityClass = 'opacity-100 bg-indigo-50 border-indigo-300 border-2 shadow-md';
+                    iconColor = 'text-indigo-600';
+                } else {
+                    opacityClass = 'opacity-60 bg-slate-50 border-slate-200 border';
+                }
+                
+                container.innerHTML += `
+                    <div class="flex items-center p-3 rounded-2xl ${opacityClass} transition-all relative overflow-hidden">
+                        <div class="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mr-4 shrink-0 shadow-inner">
+                            <i data-lucide="${isGot ? 'check-circle' : 'map-pin'}" class="w-6 h-6 ${iconColor}"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center justify-between mb-1">
+                                <h3 class="font-bold text-slate-800 truncate pr-2">${spot.name}</h3>
+                                ${statusBadge}
+                            </div>
+                            <p class="text-[10px] text-slate-500 truncate">${spot.label}</p>
+                        </div>
                     </div>
                 `;
-                container.appendChild(card);
             });
             if(window.lucide) lucide.createIcons();
         }
 
         function updateTicketScreen() {
-            if (stamps.length >= 5) {
+            if (stamps.length >= 14) {
                 document.getElementById('ticket-unlocked').classList.remove('hidden');
                 document.getElementById('ticket-locked').classList.add('hidden');
                 
@@ -802,78 +712,90 @@
             }
         }
 
-        function useTicket() {
-            if (confirm("特典を利用済みにしますか？\n※必ずスタッフの目の前で「OK」を押してください。取り消しはできません。")) {
-                ticketUsed = true;
-                localStorage.setItem('ichijo_festival_ticket_used', 'true');
-                updateTicketScreen();
+        function openResultModal(spot, type) {
+            const modal = document.getElementById('result-modal');
+            const title = document.getElementById('modal-title');
+            const desc = document.getElementById('modal-desc');
+            const statusBox = document.getElementById('modal-status-box');
+            const statusIcon = document.getElementById('modal-status-icon');
+            const statusText = document.getElementById('modal-status-text');
+            
+            modal.classList.remove('hidden');
+            setTimeout(() => modal.classList.remove('opacity-0'), 10);
+            
+            if (type === 'success') {
+                title.textContent = "スタンプ獲得！";
+                title.className = "text-2xl font-black text-rose-600 mb-2";
+                desc.innerHTML = `<span class="font-bold text-lg text-slate-800">${spot.name}</span><br>のスタンプをゲットしました！`;
+                statusBox.className = "p-3 rounded-xl font-bold flex items-center justify-center mb-6 bg-rose-50 text-rose-600 border border-rose-200";
+                statusIcon.setAttribute('data-lucide', 'check-circle');
+                statusText.textContent = "ミッションクリア！";
+            } else if (type === 'wrong_target') {
+                title.textContent = "ちがう場所です！";
+                title.className = "text-2xl font-black text-amber-600 mb-2";
+                desc.innerHTML = `ここは <span class="font-bold">${spot.name}</span> です。<br>くじ引きで決まった目的地に行ってください！`;
+                statusBox.className = "p-3 rounded-xl font-bold flex items-center justify-center mb-6 bg-amber-50 text-amber-600 border border-amber-200";
+                statusIcon.setAttribute('data-lucide', 'alert-triangle');
+                statusText.textContent = "目的地を確認してね";
             }
+            if (window.lucide) lucide.createIcons();
         }
 
-        // ==========================================
-        // ★ 2回目・3回目の周回を開始する処理
-        // ==========================================
-        function startNextLap() {
-            if (confirm(`スタンプをリセットして、${lapCount + 1}周目のスタンプラリーを開始しますか？\n（お名前はそのまま引き継がれます）`)) {
-                stamps = [];
-                ticketUsed = false;
-                currentTargetId = null;
-                lapCount++;
-                
-                localStorage.removeItem('ichijo_festival_stamps');
-                localStorage.removeItem('ichijo_festival_ticket_used');
-                localStorage.removeItem('ichijo_festival_target_id');
-                localStorage.setItem('ichijo_festival_lap_count', lapCount.toString());
-                
-                updateAllUI();
-                switchTab('scan');
-                window.scrollTo(0, 0); 
-            }
+        function closeResultModal() {
+            const modal = document.getElementById('result-modal');
+            modal.classList.add('opacity-0');
+            setTimeout(() => modal.classList.add('hidden'), 300);
         }
 
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.getElementById(`tab-${tabId}`).classList.add('active');
-            document.querySelectorAll('.nav-btn').forEach(el => el.classList.replace('text-indigo-600', 'text-slate-400'));
-            document.querySelectorAll('[id^="nav-icon-bg-"]').forEach(el => el.classList.remove('bg-indigo-50', 'text-indigo-600'));
-            const activeNav = document.getElementById(`nav-${tabId}`);
-            const activeIconBg = document.getElementById(`nav-icon-bg-${tabId}`);
-            if (activeNav) activeNav.classList.replace('text-slate-400', 'text-indigo-600');
-            if (activeIconBg) activeIconBg.classList.add('bg-indigo-50', 'text-indigo-600');
-            if (tabId !== 'scan') stopScanner();
-        }
-
-        function openResultModal(spot, type) {
-            document.getElementById('modal-title').textContent = spot.name + " (" + spot.label + ")";
-            document.getElementById('modal-desc').textContent = spot.desc;
-            const statusBox = document.getElementById('modal-status-box');
-            const statusText = document.getElementById('modal-status-text');
-            const statusIcon = document.getElementById('modal-status-icon');
-            if (type === 'success') {
-                statusBox.className = "p-4 rounded-2xl font-bold flex items-center justify-center mb-6 border bg-emerald-50 border-emerald-200 text-emerald-700";
-                statusText.textContent = "スタンプを獲得しました！";
-                statusIcon.setAttribute('data-lucide', 'check-circle-2');
-            } else {
-                statusBox.className = "p-4 rounded-2xl font-bold flex items-center justify-center mb-6 border bg-slate-50 border-slate-200 text-slate-600";
-                statusText.textContent = "このスタンプは獲得済みです";
-                statusIcon.setAttribute('data-lucide', 'info');
+            
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('text-indigo-600');
+                btn.classList.add('text-slate-400');
+            });
+            document.querySelectorAll('[id^="nav-icon-bg-"]').forEach(bg => bg.classList.remove('bg-indigo-50'));
+            
+            const activeBtn = document.getElementById(`nav-${tabId}`);
+            const activeBg = document.getElementById(`nav-icon-bg-${tabId}`);
+            if (activeBtn) {
+                activeBtn.classList.remove('text-slate-400');
+                activeBtn.classList.add('text-indigo-600');
             }
-            const modal = document.getElementById('result-modal');
-            const content = document.getElementById('result-modal-content');
-            modal.classList.remove('hidden');
-            setTimeout(() => { modal.classList.remove('opacity-0'); content.classList.remove('scale-95'); }, 10);
-            if(window.lucide) lucide.createIcons();
+            if (activeBg) activeBg.classList.add('bg-indigo-50');
         }
 
-        function closeResultModal() {
-            const modal = document.getElementById('result-modal');
-            const content = document.getElementById('result-modal-content');
-            modal.classList.add('opacity-0');
-            content.classList.add('scale-95');
-            setTimeout(() => { modal.classList.add('hidden'); }, 300);
+        function useTicket() {
+            if (confirm("スタッフの前で「はい」を押してください。利用済みにしますか？")) {
+                ticketUsed = true;
+                localStorage.setItem('ichijo_festival_ticket_used', 'true');
+                updateTicketScreen();
+                
+                sendDataToGAS("useTicket", {
+                    userId: userName,
+                    lap: lapCount
+                });
+            }
         }
 
-        window.onload = init;
+        function startNextLap() {
+            lapCount++;
+            stamps = [];
+            ticketUsed = false;
+            currentTargetId = null;
+            
+            localStorage.setItem('ichijo_festival_lap_count', lapCount.toString());
+            localStorage.setItem('ichijo_festival_stamps', JSON.stringify([]));
+            localStorage.setItem('ichijo_festival_ticket_used', 'false');
+            localStorage.removeItem('ichijo_festival_target_id');
+            
+            updateAllUI();
+            switchTab('scan');
+            alert(`${lapCount}周目を開始します！`);
+        }
+
+        window.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>
