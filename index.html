@@ -406,24 +406,51 @@
         // ==========================================
        // 完全ランダムで1箇所だけ目的地を選ぶ（連打防止・自動データ送信なし）
 function drawLottery() {
-    // 1. まだスタンプを獲得していないクラスだけを抽出
+    if (isDrawing) return; // 処理中の連打・重複実行をブロック
+    
+    // 1. まだ獲得していないスポット（1〜14）を抽出
     const availableSpots = SPOTS.filter(spot => !stamps.includes(spot.id));
     
     if (availableSpots.length === 0) {
-        alert("すべてのスタンプを獲得済みです！コンプリート特典をご確認ください。");
+        alert("すべてのスタンプを獲得済みです！");
         return;
     }
 
-    // 2. 完全ランダムで1つ選出（Math.random を使用）
+    isDrawing = true;
+
+    // 2. 残りの未獲得スポットから完全ランダムで1つ選出
     const randomIndex = Math.floor(Math.random() * availableSpots.length);
     const selectedSpot = availableSpots[randomIndex];
 
-    // 3. 目的地として保存
-    currentTargetId = selectedSpot.id;
-    localStorage.setItem('ichijo_festival_target_id', selectedSpot.id);
-    
-    // 画面表示を更新
-    updateUI();
+    // 3. シャッフルアニメーション表示
+    const display = document.getElementById('lottery-display');
+    if (display) {
+        display.classList.remove('text-indigo-300', 'text-3xl');
+        display.classList.add('text-indigo-600', 'text-2xl', 'animate-pulse');
+    }
+
+    let count = 0;
+    const interval = setInterval(() => {
+        const randomSpot = availableSpots[Math.floor(Math.random() * availableSpots.length)];
+        if (display) display.textContent = randomSpot.name;
+        count++;
+        
+        if (count > 12) {
+            clearInterval(interval);
+            if (display) {
+                display.textContent = selectedSpot.name;
+                display.classList.remove('animate-pulse');
+            }
+            
+            setTimeout(() => {
+                // ★目的地（1箇所）のみを設定（スタンプ追加やGAS送信は一切行いません）
+                currentTargetId = selectedSpot.id;
+                localStorage.setItem('ichijo_festival_target_id', currentTargetId.toString());
+                isDrawing = false;
+                updateScanUI();
+            }, 400);
+        }
+    }, 80);
 }
     fetch(GAS_URL, {
         method: "POST",
