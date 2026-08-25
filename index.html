@@ -274,99 +274,110 @@
         // ==========================================
         const GAS_API_URL = "https://script.google.com/macros/s/AKfycbw1jPhVdaKLAvmzqCB-fozTGuCrrFb0sw0gN92kt71bs-B9LHa59nO2Dq_nyko-5sUP/exec"; 
 
-        const SPOTS = [
-            // 高校1年生 (アトラクション) - id: 1~7
-            { id: 1, name: "1年1組", label: "謎解き迷路", type: "1年アトラクション", desc: "高校1年生：謎解き迷路が楽しめるアトラクションスポットです。", mission: "出口にいるスタッフに「脱出成功！」と元気よく伝えよう！" },
-            { id: 2, name: "1年2組", label: "おばけやしき", type: "1年アトラクション", desc: "高校1年生：スリルと恐怖を体験できる本格おばけやしき！", mission: "出口にいるスタッフに「全然怖くなかったよ！」と強がってみよう！" },
-            { id: 3, name: "1年3組", label: "おばけやしき", type: "1年アトラクション", desc: "高校1年生：暗闇に隠された驚きが待つおばけやしきスポット。", mission: "出口にいるスタッフと「おばけポーズ」をしてから帰ろう！" },
-            { id: 4, name: "1年4組", label: "キッキングスナイパー", type: "1年アトラクション", desc: "高校1年生：狙いを定めて蹴り倒すキッキングスナイパー！", mission: "終わった後、スタッフに「ナイスキック！」と声をかけよう！" },
-            { id: 5, name: "1年5組", label: "カジノ", type: "1年アトラクション", desc: "高校1年生：カジノゲームのスリルを安全に楽しめる特設ブース。", mission: "帰る時に、スタッフへ「サンキュー、ディーラー！」と挨拶しよう！" },
-            { id: 6, name: "1年6組", label: "遊園地", type: "1年アトラクション", desc: "高校1年生：楽しいアトラクションが詰まったミニ遊園地エリア。", mission: "遊び終わった後、スタッフに両手で大きく手を振ろう！" },
-            { id: 7, name: "1年7組", label: "アーチ", type: "1年アトラクション", desc: "高校1年生：学校を華やかに彩る記念アーチ・ゲートスポット。", mission: "アーチの近くのスタッフに「文化祭最高！」と声をかけよう！" },
-            
-            // 高校2年生 (物品販売・出展) - id: 8~14
-            { id: 8, name: "2年1組", label: "缶バッジ・チェキ", type: "2年物販・展示", desc: "高校2年生：思い出のチェキ撮影やオリジナル缶バッジを販売！", mission: "スタッフに「おすすめの缶バッジはどれですか？」と聞いてみよう！" },
-            { id: 9, name: "2年2組", label: "ラバーバンド・エコバッグ", type: "2年物販・展示", desc: "高校2年生：お揃いで付けたいラバーバンドと便利なエコバッグ。", mission: "ブースを出る時に、スタッフへ「エコバッグ便利そう！」と声をかけよう！" },
-            { id: 10, name: "2年3組", label: "キーホルダー・ラバーバンド", type: "2年物販・展示", desc: "高校2年生：限定オリジナルデザインのキーホルダーとラバーバンド！", mission: "スタッフに「一番人気のキーホルダーはどれですか？」と質問してみよう！" },
-            { id: 11, name: "2年4組", label: "タオル・ステッカー", type: "2年物販・展示", desc: "高校2年生：マストハブな特製タオルと、どこにでも貼れるステッカー！", mission: "ブースを出る時に、スタッフへ「ステッカー可愛いですね！」と伝えよう！" },
-            { id: 12, name: "2年5組", label: "タオル・目印チャーム", type: "2年物販・展示", desc: "高校2年生：実用的なタオルとお気に入りのバッグに付けたい目印チャーム。", mission: "スタッフに「このタオルのおすすめポイントは？」と聞いてみよう！" },
-            { id: 13, name: "2年6組", label: "ヘアバンド・前髪クリップ", type: "2年物販・展示", desc: "高校2年生：日常でも大活躍する可愛いヘアバンドと前髪クリップ！", mission: "ブースを出る時に、スタッフと笑顔で両手を振り合おう！" },
-            { id: 14, name: "2年7組", label: "缶バッジ・クリアボトル", type: "2年物販・展示", desc: "高校2年生：限定クリアボトルとお気に入りの絵柄の缶バッジ！", mission: "ブースを出る時に、スタッフへ「ボトルおしゃれですね！」と声をかけよう！" }
-        ];
+// ==========================================
+// 1. スポット定義（1年1〜7組、2年1〜7組の全14箇所）
+// ==========================================
+const SPOTS = [
+    { id: 1, name: "1年1組", genre: "attraction", emoji: "🎪", desc: "ミッションをクリアしてスタンプをGET！" },
+    { id: 2, name: "1年2組", genre: "attraction", emoji: "☕", desc: "ミッションをクリアしてスタンプをGET！" },
+    { id: 3, name: "1年3組", genre: "attraction", emoji: "🎯", desc: "ミッションをクリアしてスタンプをGET！" },
+    { id: 4, name: "1年4組", genre: "attraction", emoji: "👻", desc: "ミッションをクリアしてスタンプをGET！" },
+    { id: 5, name: "1年5組", genre: "food_exhibit", emoji: "🍔", desc: "ミッションをクリアしてスタンプをGET！" },
+    { id: 6, name: "1年6組", genre: "food_exhibit", emoji: "🎨", desc: "ミッションをクリアしてスタンプをGET！" },
+    { id: 7, name: "1年7組", genre: "food_exhibit", emoji: "📸", desc: "ミッションをクリアしてスタンプをGET！" },
+    { id: 8, name: "2年1組", genre: "attraction", emoji: "🎸", desc: "ミッションをクリアしてスタンプをGET！" },
+    { id: 9, name: "2年2組", genre: "attraction", emoji: "🍿", desc: "ミッションをクリアしてスタンプをGET！" },
+    { id: 10, name: "2年3組", genre: "attraction", emoji: "🎳", desc: "ミッションをクリアしてスタンプをGET！" },
+    { id: 11, name: "2年4組", genre: "attraction", emoji: "🍩", desc: "ミッションをクリアしてスタンプをGET！" },
+    { id: 12, name: "2年5組", genre: "food_exhibit", emoji: "🎬", desc: "ミッションをクリアしてスタンプをGET！" },
+    { id: 13, name: "2年6組", genre: "food_exhibit", emoji: "🍧", desc: "ミッションをクリアしてスタンプをGET！" },
+    { id: 14, name: "2年7組", genre: "food_exhibit", emoji: "🎈", desc: "ミッションをクリアしてスタンプをGET！" }
+];
 
-        let stamps = [];
-        let html5QrCode = null; 
-        let isProcessing = false;
-        let isDrawing = false;
+// フラグ変数
+let isDrawing = false;
 
-        // ★ 一番安定していた初期の保存方式とキー名に完全に戻しました（余計な安全装置を解除）
-        let userName = localStorage.getItem('ichijo_festival_user_name');
-        let ticketUsed = localStorage.getItem('ichijo_festival_ticket_used') === 'true';
-        let currentTargetId = localStorage.getItem('ichijo_festival_target_id') ? parseInt(localStorage.getItem('ichijo_festival_target_id')) : null;
-        let lapCount = parseInt(localStorage.getItem('ichijo_festival_lap_count') || '1');
+// ==========================================
+// 2. くじ引き関数（完全ランダム・連打防止・自動データ送信なし）
+// ==========================================
+function drawLottery() {
+    if (isDrawing) return; // 連打防止
 
-        function init() {
-            if (window.lucide) lucide.createIcons();
-            startClock(); 
-            
-            if (!userName) {
-                // 名前入力の前に、必ず確認モーダルを表示
-                document.getElementById('welcome-confirm-modal').classList.remove('hidden');
-            } else {
-                completeInit();
+    const availableSpots = SPOTS.filter(spot => !stamps.includes(spot.id));
+    if (availableSpots.length === 0) {
+        alert("すべてのスタンプを獲得済みです！");
+        return;
+    }
+
+    isDrawing = true;
+
+    // 未獲得から完全ランダムで1つ選出
+    const randomIndex = Math.floor(Math.random() * availableSpots.length);
+    const selectedSpot = availableSpots[randomIndex];
+
+    // 目的地のみ保存（※GAS送信やスタンプ追加は行いません）
+    currentTargetId = selectedSpot.id;
+    localStorage.setItem('ichijo_festival_target_id', currentTargetId.toString());
+
+    // アニメーション表示
+    const display = document.getElementById('lottery-display');
+    if (display) {
+        let count = 0;
+        const interval = setInterval(() => {
+            const randomSpot = availableSpots[Math.floor(Math.random() * availableSpots.length)];
+            display.textContent = randomSpot.name;
+            count++;
+            if (count > 10) {
+                clearInterval(interval);
+                display.textContent = selectedSpot.name;
+                isDrawing = false;
+                if (typeof updateUI === 'function') updateUI();
+                if (typeof updateScanUI === 'function') updateScanUI();
             }
-        }
+        }, 80);
+    } else {
+        isDrawing = false;
+        if (typeof updateUI === 'function') updateUI();
+        if (typeof updateScanUI === 'function') updateScanUI();
+    }
+}
 
-        // チェックボックスの状態に応じてボタンの見た目と押せる状態を切り替える
-        function toggleConfirmBtn() {
-            const isChecked = document.getElementById('browser-check').checked;
-            const btn = document.getElementById('confirm-next-btn');
-            if (isChecked) {
-                btn.disabled = false;
-                btn.classList.remove('bg-slate-300', 'text-slate-500', 'cursor-not-allowed');
-                btn.classList.add('bg-indigo-600', 'text-white', 'hover:bg-indigo-700', 'shadow-md');
-            } else {
-                btn.disabled = true;
-                btn.classList.add('bg-slate-300', 'text-slate-500', 'cursor-not-allowed');
-                btn.classList.remove('bg-indigo-600', 'text-white', 'hover:bg-indigo-700', 'shadow-md');
-            }
-        }
+// ==========================================
+// 3. データ送信関数（1,000人規模対応・0〜5秒のジッター遅延送信）
+// ==========================================
+function sendDataToGAS(spotName) {
+    const GAS_URL = "ここにご自身のGASウェブアプリURLを貼り付け"; 
 
-        // 確認完了後にお名前入力へ進む
-        function goToNameInput() {
-            document.getElementById('welcome-confirm-modal').classList.add('hidden');
-            document.getElementById('name-input-modal').classList.remove('hidden');
-            if (window.lucide) lucide.createIcons();
-        }
+    if (!GAS_URL || GAS_URL.includes("ここに")) return;
 
-        // 時計を動かす機能
-        function startClock() {
-            function updateClock() {
-                const now = new Date();
-                const h = String(now.getHours()).padStart(2, '0');
-                const m = String(now.getMinutes()).padStart(2, '0');
-                const s = String(now.getSeconds()).padStart(2, '0');
-                const clockEl = document.getElementById('current-time');
-                if (clockEl) {
-                    clockEl.textContent = `${h}:${m}:${s}`;
-                }
-            }
-            updateClock(); 
-            setInterval(updateClock, 1000);
-        }
+    const payload = {
+        userName: userName,
+        spotName: spotName,
+        lapCount: lapCount
+    };
 
-        // テストデータのリセット機能
-        function resetTestData() {
-            if (confirm("これまでのスタンプ記録やお名前のデータをすべて消去して、最初からやり直しますか？")) {
-                localStorage.removeItem('ichijo_festival_stamps');
-                localStorage.removeItem('ichijo_festival_user_name');
-                localStorage.removeItem('ichijo_festival_ticket_used');
-                localStorage.removeItem('ichijo_festival_target_id');
-                localStorage.removeItem('ichijo_festival_lap_count');
-                location.reload();
-            }
-        }
+    // 0〜5000ミリ秒（0〜5秒）の間でランダムに送信をずらし、サーバー負荷を分散
+    const randomDelay = Math.floor(Math.random() * 5000);
 
+    setTimeout(() => {
+        fetch(GAS_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        }).catch(err => console.error("送信エラー:", err));
+    }, randomDelay);
+}
+
+// ==========================================
+// 4. テストデータリセット関数
+// ==========================================
+function resetTestData() {
+    if (confirm("テストデータをリセットして最初からやり直しますか？")) {
+        localStorage.clear();
+        location.reload();
+    }
+}
         function submitName() {
             const input = document.getElementById('fullname-input');
             const nameValue = input.value.trim();
