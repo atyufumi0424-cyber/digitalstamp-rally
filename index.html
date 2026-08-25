@@ -180,17 +180,22 @@
     let html5QrcodeScanner = null;
 
     // ==========================================
-    // 3. 初期化処理
+    // 3. 初期化処理 (init関数の安全定義)
     // ==========================================
-    document.addEventListener("DOMContentLoaded", () => {
-      lucide.createIcons();
+    function init() {
+      if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+      }
       
       if (!userName) {
         document.getElementById('name-modal').classList.remove('hidden');
       } else {
         updateUI();
       }
-    });
+    }
+    // グローバルスコープに割り当て
+    window.init = init;
+    document.addEventListener("DOMContentLoaded", init);
 
     // ユーザー名保存
     function saveUserName() {
@@ -207,12 +212,10 @@
 
     // 全体画面更新
     function updateUI() {
-      // プレイヤー名・各種数値の更新
       document.getElementById('player-name-display').textContent = userName || '未登録';
       document.getElementById('lap-count-display').textContent = lapCount;
       document.getElementById('header-stamp-count').textContent = stamps.length;
 
-      // くじ引き／目的地表示の更新
       const display = document.getElementById('lottery-display');
       if (currentTargetId) {
         const targetSpot = SPOTS.find(s => s.id === currentTargetId);
@@ -224,10 +227,7 @@
         display.textContent = "「くじを引く」を押してください";
       }
 
-      // スタンプ帳グリッド更新
       renderStampsGrid();
-
-      // 特典状態更新
       renderRewards();
     }
 
@@ -245,7 +245,6 @@
 
       isDrawing = true;
 
-      // 未獲得から完全ランダム選出
       const randomIndex = Math.floor(Math.random() * availableSpots.length);
       const selectedSpot = availableSpots[randomIndex];
 
@@ -322,17 +321,14 @@
         return;
       }
 
-      // スタンプ獲得
       stamps.push(foundSpot.id);
       localStorage.setItem('ichijo_festival_stamps', JSON.stringify(stamps));
 
-      // 目的地クリア（一致した場合）
       if (currentTargetId === foundSpot.id) {
         currentTargetId = null;
         localStorage.removeItem('ichijo_festival_target_id');
       }
 
-      // GASへの遅延（ジッター）送信
       sendDataToGAS(foundSpot.name);
 
       stopScanner();
@@ -364,7 +360,6 @@
         timestamp: new Date().toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" })
       };
 
-      // 0〜5000ミリ秒（0〜5秒）の間でランダムに分散送信
       const randomDelay = Math.floor(Math.random() * 5000);
 
       setTimeout(() => {
