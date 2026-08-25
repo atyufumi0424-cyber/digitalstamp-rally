@@ -20,50 +20,45 @@
         .tab-content.active { display: flex; flex-direction: column; }
 
         @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(15px); }
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .animate-fade-in-up { animation: fadeInUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        @keyframes pulse-soft {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.8; }
-        }
-        .animate-pulse-soft { animation: pulse-soft 2s infinite; }
-
+        .animate-fade-in-up { animation: fadeInUp 0.3s ease-out forwards; }
+        
         .pb-safe { padding-bottom: max(env(safe-area-inset-bottom), 24px); }
-        .pt-safe { padding-top: max(env(safe-area-inset-top), 48px); }
+        .pt-safe { padding-top: max(env(safe-area-inset-top), 40px); }
     </style>
 </head>
-<body class="bg-indigo-900 flex justify-center h-screen overflow-hidden">
+<body class="bg-[#f0f4f9] flex justify-center h-screen overflow-hidden">
 
-    <div class="flex flex-col h-full w-full max-w-md bg-white shadow-2xl relative overflow-hidden">
+    <div class="flex flex-col h-full w-full max-w-md bg-[#f0f4f9] relative overflow-hidden">
         
         <!-- ヘッダー -->
-        <header class="bg-indigo-600 text-white p-4 pt-safe shadow-md z-10 flex justify-between items-center shrink-0">
+        <header class="bg-white text-slate-800 p-4 pt-safe border-b border-slate-200 z-10 flex justify-between items-center shrink-0">
             <div class="flex flex-col">
-                <h1 class="text-xl font-bold tracking-wider leading-tight">文化祭スタンプラリー</h1>
-                <div class="flex items-center mt-1 space-x-2">
-                    <p class="text-[10px] text-indigo-200">全5箇所（アトラクション4・展示物販1）で特典！</p>
-                    <span id="current-time" class="text-[10px] font-mono bg-indigo-800 px-1.5 py-0.5 rounded border border-indigo-500 shadow-inner">00:00:00</span>
+                <h1 class="text-lg font-bold tracking-tight">文化祭スタンプラリー</h1>
+                <div class="flex items-center mt-0.5 space-x-2">
+                    <p class="text-[10px] text-slate-500">全5箇所巡って特典GET！</p>
+                    <span id="current-time" class="text-[10px] font-mono bg-slate-100 px-1.5 py-0.5 rounded text-slate-600">00:00:00</span>
                 </div>
             </div>
-            <div class="flex items-center bg-indigo-700 px-3 py-1.5 rounded-full border border-indigo-500 shadow-inner shrink-0">
-                <i data-lucide="trophy" class="w-4 h-4 text-yellow-400 mr-1"></i>
-                <span id="header-stamp-count" class="font-bold text-sm">0 / 5</span>
+            <div class="flex items-center bg-indigo-50 px-3 py-1.5 rounded-full border border-indigo-100">
+                <i data-lucide="trophy" class="w-4 h-4 text-amber-500 mr-1.5"></i>
+                <span id="header-stamp-count" class="font-bold text-sm text-indigo-900">0 / 5</span>
             </div>
         </header>
 
         <!-- メインコンテンツ -->
-        <main class="flex-1 relative overflow-y-auto overflow-x-hidden bg-slate-50">
+        <main class="flex-1 relative overflow-y-auto overflow-x-hidden p-6 pb-32">
             
             <!-- 1. スキャン（くじ引き＆ホーム）画面 -->
-            <section id="tab-scan" class="tab-content active p-6 min-h-full bg-gradient-to-b from-blue-50 to-white items-center justify-start pt-14 pb-32">
+            <section id="tab-scan" class="tab-content active min-h-full items-center justify-start pt-4">
                 
-                <div id="start-ui" class="flex flex-col items-center w-full max-w-[300px] animate-fade-in-up">
+                <div id="start-ui" class="flex flex-col items-center w-full max-w-[320px] animate-fade-in-up">
                     <!-- ユーザー名表示 -->
-                    <div class="bg-indigo-50 border border-indigo-100 rounded-xl px-4 py-2 mb-6 w-full text-center shrink-0">
-                        <p class="text-[10px] text-indigo-400 font-bold">参加中のプレイヤー</p>
-                        <p id="display-user-name" class="font-bold text-indigo-900 text-sm">読み込み中...</p>
+                    <div class="bg-white/80 backdrop-blur border border-slate-200/80 rounded-2xl px-4 py-2 mb-6 w-full text-center shrink-0 shadow-sm">
+                        <p class="text-[10px] text-slate-400 font-bold">参加中のプレイヤー</p>
+                        <p id="display-user-name" class="font-bold text-slate-700 text-sm">読み込み中...</p>
                     </div>
 
                     <div id="lottery-section" class="w-full flex flex-col items-center shrink-0"></div>
@@ -72,19 +67,18 @@
                         <p id="scan-error-text" class="text-red-500 font-bold text-xs"></p>
                     </div>
 
-                    <div class="mt-8 pt-6 border-t border-slate-200 w-full text-center">
-                        <button onclick="resetTestData()" class="text-xs text-slate-400 hover:text-slate-600 underline decoration-slate-300">テストデータをリセットして最初からやり直す</button>
+                    <div class="mt-8 pt-4 w-full text-center">
+                        <button onclick="resetTestData()" class="text-xs text-slate-400 hover:text-slate-600 underline">テストデータをリセットして最初からやり直す</button>
                     </div>
                 </div>
 
                 <!-- スキャン中UI -->
                 <div id="scanner-ui" class="hidden w-full flex-col items-center animate-fade-in-up">
-                    <h2 class="text-xl font-bold text-indigo-900 mb-4">枠内にQRコードを合わせてください</h2>
-                    <div class="relative w-full max-w-[300px] mb-8 shrink-0">
-                        <div id="qr-reader" class="w-full bg-black rounded-3xl overflow-hidden border-4 border-indigo-400 shadow-[0_0_15px_rgba(79,70,229,0.3)]"></div>
-                        <div class="absolute inset-0 border-[3px] border-white/40 border-dashed rounded-3xl pointer-events-none m-6 animate-pulse-soft"></div>
+                    <h2 class="text-lg font-bold text-slate-800 mb-4">枠内にQRコードを合わせてください</h2>
+                    <div class="relative w-full max-w-[280px] mb-6 shrink-0">
+                        <div id="qr-reader" class="w-full bg-black rounded-3xl overflow-hidden border-4 border-indigo-500 shadow-lg"></div>
                     </div>
-                    <button onclick="stopScanner()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 px-8 py-3 rounded-full font-bold w-full max-w-[200px] transition-colors shadow-sm flex justify-center items-center">
+                    <button onclick="stopScanner()" class="bg-white border border-slate-300 text-slate-700 px-8 py-3 rounded-2xl font-bold w-full max-w-[200px] shadow-sm flex justify-center items-center">
                         <i data-lucide="x" class="w-4 h-4 mr-1"></i>キャンセル
                     </button>
                 </div>
@@ -92,46 +86,40 @@
             </section>
 
             <!-- 2. スタンプ帳画面 -->
-            <section id="tab-stamps" class="tab-content p-6 min-h-full bg-[#f8f9fa] pb-32">
+            <section id="tab-stamps" class="tab-content min-h-full pb-32">
                 <div class="flex flex-col items-center mb-6">
-                    <h2 class="text-2xl font-bold text-indigo-900 mb-1">スタンプコレクション</h2>
-                    <div class="w-16 h-1 bg-indigo-300 rounded-full mb-2"></div>
-                    <p class="text-sm text-slate-500">くじ引きで指定された5箇所を巡って特典GET！</p>
+                    <h2 class="text-xl font-bold text-slate-800 mb-1">スタンプコレクション</h2>
+                    <p class="text-xs text-slate-500">くじ引きで指定された5箇所を巡ろう！</p>
                 </div>
-                <div id="stamp-list-container" class="flex flex-col space-y-4"></div>
+                <div id="stamp-list-container" class="flex flex-col space-y-3"></div>
             </section>
 
             <!-- 3. 特典画面 -->
-            <section id="tab-ticket" class="tab-content p-6 min-h-full bg-slate-900 items-center justify-start pt-16 text-center pb-32">
+            <section id="tab-ticket" class="tab-content min-h-full items-center justify-start pt-8 text-center pb-32">
                 <div id="ticket-unlocked" class="hidden w-full max-w-sm animate-fade-in-up">
-                    <div class="relative bg-gradient-to-br from-yellow-300 via-amber-400 to-yellow-600 p-1.5 rounded-[2rem] shadow-[0_0_40px_rgba(251,191,36,0.4)]">
-                        <div class="bg-white rounded-[1.7rem] p-8 relative overflow-hidden">
-                            <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-red-500 via-yellow-400 to-blue-500"></div>
-                            <div class="relative">
-                                <i data-lucide="gift" class="w-16 h-16 mx-auto text-amber-500 mb-3 animate-bounce"></i>
-                            </div>
-                            <p class="text-xs font-bold text-amber-600 tracking-widest mb-1">5 SPOTS CLEARED</p>
-                            <h2 class="text-3xl font-black text-indigo-900 mb-6 border-b border-slate-200 pb-4">コンプリート特典</h2>
-                            <div class="bg-indigo-50 border border-indigo-100 rounded-2xl p-5 mb-6 shadow-inner">
-                                <p class="font-bold text-indigo-800 text-xl mb-1">模擬店 100円割引券</p>
-                            </div>
-                            <div class="bg-slate-100 rounded-xl py-2 px-4 mb-4 text-center border border-slate-200">
-                                <p class="text-[9px] text-slate-400 font-bold">獲得者(フルネーム)</p>
-                                <p id="ticket-user-name" class="font-bold text-slate-800 text-sm">--</p>
-                            </div>
-                            <p id="ticket-instruction" class="text-xs text-slate-500 mb-6 font-medium leading-relaxed">生徒会本部または景品交換所で<br/>この画面を提示してください。</p>
-                            <div id="ticket-action-area"></div>
+                    <div class="bg-white p-8 rounded-[2rem] border-4 border-amber-400 shadow-xl relative overflow-hidden">
+                        <i data-lucide="gift" class="w-16 h-16 mx-auto text-amber-500 mb-3 animate-bounce"></i>
+                        <p class="text-xs font-bold text-amber-600 tracking-widest mb-1">5 SPOTS CLEARED</p>
+                        <h2 class="text-2xl font-black text-slate-800 mb-6 border-b border-slate-100 pb-4">コンプリート特典</h2>
+                        <div class="bg-indigo-50 border border-indigo-100 rounded-2xl p-4 mb-6">
+                            <p class="font-bold text-indigo-900 text-lg mb-1">模擬店 100円割引券</p>
                         </div>
+                        <div class="bg-slate-50 rounded-xl py-2 px-4 mb-4 text-center border border-slate-200">
+                            <p class="text-[9px] text-slate-400 font-bold">獲得者</p>
+                            <p id="ticket-user-name" class="font-bold text-slate-800 text-sm">--</p>
+                        </div>
+                        <p id="ticket-instruction" class="text-xs text-slate-500 mb-6 font-medium leading-relaxed">生徒会本部または景品交換所で<br/>この画面を提示してください。</p>
+                        <div id="ticket-action-area"></div>
                     </div>
                 </div>
                 
-                <div id="ticket-locked" class="text-white flex flex-col items-center mt-8">
-                    <div class="w-24 h-24 rounded-full bg-slate-800 flex items-center justify-center mx-auto mb-6">
-                        <i data-lucide="trophy" class="w-10 h-10 text-slate-500"></i>
+                <div id="ticket-locked" class="text-slate-800 flex flex-col items-center mt-12">
+                    <div class="w-20 h-20 rounded-full bg-slate-200 flex items-center justify-center mx-auto mb-4">
+                        <i data-lucide="trophy" class="w-10 h-10 text-slate-400"></i>
                     </div>
-                    <h2 class="text-2xl font-bold mb-3 tracking-wide">まだ特典はありません</h2>
-                    <p class="text-slate-400 mb-10 text-sm leading-relaxed">くじ引きで指定されたクラスの<br>スタンプを5個集めよう！</p>
-                    <button onclick="switchTab('scan')" class="bg-indigo-600 hover:bg-indigo-500 text-white px-10 py-3.5 rounded-full font-bold transition-all shadow-[0_0_15px_rgba(79,70,229,0.3)]">
+                    <h2 class="text-xl font-bold mb-2">まだ特典はありません</h2>
+                    <p class="text-slate-500 mb-8 text-xs leading-relaxed">くじ引きで指定されたクラスの<br>スタンプを5個集めよう！</p>
+                    <button onclick="switchTab('scan')" class="bg-indigo-600 text-white px-8 py-3 rounded-2xl font-bold shadow-md">
                         くじ引き・スキャンに戻る
                     </button>
                 </div>
@@ -139,112 +127,102 @@
         </main>
 
         <!-- ポップアップ各種 -->
-        <div id="result-modal" class="hidden absolute inset-0 bg-slate-900/80 backdrop-blur-sm z-[100] flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
-            <div class="bg-white rounded-3xl p-6 w-full max-w-sm text-center shadow-2xl transform scale-95 transition-transform duration-300 relative" id="result-modal-content">
-                <button onclick="closeResultModal()" class="absolute top-4 right-4 bg-slate-100 text-slate-400 hover:bg-slate-200 hover:text-slate-600 rounded-full p-2 transition-colors">
-                    <i data-lucide="x" class="w-5 h-5"></i>
+        <div id="result-modal" class="hidden absolute inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+            <div class="bg-white rounded-[2rem] p-6 w-full max-w-sm text-center shadow-2xl relative" id="result-modal-content">
+                <button onclick="closeResultModal()" class="absolute top-4 right-4 bg-slate-100 text-slate-400 rounded-full p-2">
+                    <i data-lucide="x" class="w-4 h-4"></i>
                 </button>
-                <div class="mt-4 mb-4 relative flex justify-center text-indigo-600">
-                    <div class="p-5 bg-indigo-50 rounded-full shadow-inner">
-                        <i data-lucide="award" class="w-16 h-16"></i>
+                <div class="mt-4 mb-4 flex justify-center text-indigo-600">
+                    <div class="p-4 bg-indigo-50 rounded-full">
+                        <i data-lucide="award" class="w-12 h-12"></i>
                     </div>
                 </div>
-                <h3 id="modal-title" class="text-2xl font-bold text-indigo-900 mb-3"></h3>
-                <p id="modal-desc" class="text-sm text-slate-600 mb-6 leading-relaxed px-2"></p>
-                <div id="modal-status-box" class="p-4 rounded-2xl font-bold flex items-center justify-center mb-6 border transition-colors">
-                    <i data-lucide="check-circle" class="w-6 h-6 mr-2" id="modal-status-icon"></i>
-                    <span id="modal-status-text" class="text-lg"></span>
+                <h3 id="modal-title" class="text-xl font-bold text-slate-800 mb-2"></h3>
+                <p id="modal-desc" class="text-xs text-slate-600 mb-6 leading-relaxed"></p>
+                <div id="modal-status-box" class="p-3 rounded-xl font-bold flex items-center justify-center mb-6 border">
+                    <i data-lucide="check-circle" class="w-5 h-5 mr-2" id="modal-status-icon"></i>
+                    <span id="modal-status-text" class="text-base"></span>
                 </div>
-                <button onclick="closeResultModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white w-full py-4 rounded-xl font-bold text-lg shadow-md transition-colors">
+                <button onclick="closeResultModal()" class="bg-indigo-600 text-white w-full py-3.5 rounded-2xl font-bold shadow-md">
                     閉じる
                 </button>
             </div>
         </div>
 
-        <div id="welcome-confirm-modal" class="hidden absolute inset-0 bg-slate-900/95 backdrop-blur-md z-[6000] flex items-center justify-center p-4">
-            <div class="bg-white rounded-3xl p-6 w-full max-w-sm text-center shadow-2xl animate-fade-in-up">
-                <div class="w-16 h-16 bg-rose-100 rounded-full flex items-center justify-center mx-auto mb-4 text-rose-600">
-                    <i data-lucide="alert-triangle" class="w-8 h-8"></i>
+        <div id="welcome-confirm-modal" class="hidden absolute inset-0 bg-slate-900/90 backdrop-blur-md z-[6000] flex items-center justify-center p-4">
+            <div class="bg-white rounded-[2rem] p-6 w-full max-w-sm text-center shadow-2xl animate-fade-in-up">
+                <div class="w-14 h-14 bg-rose-100 rounded-full flex items-center justify-center mx-auto mb-3 text-rose-600">
+                    <i data-lucide="alert-triangle" class="w-7 h-7"></i>
                 </div>
-                <h3 class="text-xl font-black text-rose-700 mb-4 tracking-tight">⚠️ 始める前のお願い</h3>
-                <div class="text-left bg-rose-50 border-2 border-rose-200 rounded-2xl p-4 mb-6 space-y-3">
-                    <p class="text-sm font-bold text-slate-800 leading-relaxed">
-                        LINEやInstagramから開いたり、iPhoneの「コントロールセンターのQRスキャナー」を使っていませんか？
+                <h3 class="text-lg font-bold text-rose-700 mb-3">⚠️ 始める前のお願い</h3>
+                <div class="text-left bg-rose-50 border border-rose-200 rounded-2xl p-4 mb-5 space-y-2">
+                    <p class="text-xs font-bold text-slate-800 leading-relaxed">
+                        LINEやInstagramから開いていませんか？
                     </p>
                     <p class="text-[11px] text-rose-700 font-bold leading-relaxed">
-                        そのまま遊ぶと、画面を閉じた瞬間に<span class="bg-yellow-200 text-rose-900 px-1">集めたスタンプがすべて消えてしまいます！</span>
+                        アプリ内ブラウザだと、閉じると<span class="bg-yellow-200 px-1">スタンプが消えてしまいます！</span>
                     </p>
-                    <div class="border-t border-rose-200 pt-3 mt-3 space-y-2">
-                        <p class="text-xs text-slate-800 font-black">【正しい開き方】</p>
-                        <p class="text-[11px] text-slate-700 font-bold leading-relaxed flex items-start">
-                            <span class="bg-indigo-100 text-indigo-800 px-1.5 py-0.5 rounded mr-1.5 shrink-0">iPhone</span>
-                            「標準カメラアプリ」で読み取り、「Safari」で開く。
-                        </p>
-                        <p class="text-[11px] text-slate-700 font-bold leading-relaxed flex items-start">
-                            <span class="bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded mr-1.5 shrink-0">Android</span>
-                            「標準カメラ」または「Googleレンズ」で読み取り、「Chrome」で開く。
-                        </p>
+                    <div class="border-t border-rose-200 pt-2 mt-2 space-y-1">
+                        <p class="text-[11px] text-slate-700 font-bold">【推奨ブラウザ】</p>
+                        <p class="text-[11px] text-slate-600">iPhone: Safari / Android: Chrome</p>
                     </div>
                 </div>
-                <div class="flex items-center justify-start mb-6 bg-slate-50 p-3 rounded-xl border border-slate-200 text-left">
+                <div class="flex items-center justify-start mb-5 bg-slate-50 p-3 rounded-xl border border-slate-200 text-left">
                     <input type="checkbox" id="browser-check" class="w-5 h-5 text-indigo-600 rounded mr-3 shrink-0" onchange="toggleConfirmBtn()">
                     <label for="browser-check" class="text-xs font-bold text-slate-700 leading-tight cursor-pointer">
-                        はい、標準のカメラアプリで読み取り、SafariやChromeで開いています！
+                        SafariまたはChromeで開いています！
                     </label>
                 </div>
-                <button id="confirm-next-btn" disabled onclick="goToNameInput()" class="bg-slate-300 text-slate-500 w-full py-4 rounded-xl font-bold text-lg transition-colors flex items-center justify-center cursor-not-allowed">
+                <button id="confirm-next-btn" disabled onclick="goToNameInput()" class="bg-slate-300 text-slate-500 w-full py-3.5 rounded-2xl font-bold transition-colors cursor-not-allowed">
                     確認して次へ
                 </button>
             </div>
         </div>
 
         <div id="name-input-modal" class="hidden absolute inset-0 bg-slate-900/90 backdrop-blur-md z-[5000] flex items-center justify-center p-4">
-            <div class="bg-white rounded-3xl p-6 w-full max-w-sm text-center shadow-2xl transform scale-100 animate-fade-in-up">
-                <div class="w-16 h-16 bg-indigo-50 rounded-full flex items-center justify-center mx-auto mb-4 text-indigo-600">
-                    <i data-lucide="user-check" class="w-8 h-8"></i>
+            <div class="bg-white rounded-[2rem] p-6 w-full max-w-sm text-center shadow-2xl animate-fade-in-up">
+                <div class="w-14 h-14 bg-indigo-50 rounded-full flex items-center justify-center mx-auto mb-3 text-indigo-600">
+                    <i data-lucide="user-check" class="w-7 h-7"></i>
                 </div>
-                <h3 class="text-xl font-bold text-indigo-900 mb-2">お名前を入力してください</h3>
-                <p class="text-xs text-slate-500 mb-4 leading-relaxed px-2">本人確認に使用します。</p>
-                <div class="bg-red-50 border border-red-200 rounded-2xl p-4 mb-6 text-left">
-                    <p class="text-xs text-red-600 font-extrabold flex items-start leading-relaxed">
-                        <i data-lucide="alert-circle" class="w-5 h-5 mr-1.5 shrink-0 text-red-500"></i>
-                        <span>⚠️ 名字と名前の間に、必ず「スペース」を1つ空けて入力してください！</span>
+                <h3 class="text-lg font-bold text-slate-800 mb-1">お名前を入力してください</h3>
+                <p class="text-xs text-slate-500 mb-4">本人確認に使用します。</p>
+                <div class="bg-red-50 border border-red-200 rounded-2xl p-3 mb-5 text-left">
+                    <p class="text-xs text-red-600 font-bold flex items-center">
+                        <i data-lucide="alert-circle" class="w-4 h-4 mr-1.5 shrink-0"></i>
+                        名字と名前の間に「スペース」を入れてね
                     </p>
                 </div>
-                <div class="space-y-4 mb-6">
-                    <input type="text" id="fullname-input" placeholder="例：一条 太郎" class="w-full px-4 py-3.5 bg-slate-100 border-2 border-slate-200 rounded-xl text-center font-bold text-lg focus:outline-none focus:border-indigo-500 transition-colors">
-                    <p id="name-validation-error" class="hidden text-xs text-red-500 font-bold"><i data-lucide="alert-circle" class="w-3.5 h-3.5 inline mr-1 -mt-0.5"></i>名字と名前の間にスペースを空けて入力してください</p>
+                <div class="space-y-3 mb-5">
+                    <input type="text" id="fullname-input" placeholder="例：一条 太郎" class="w-full px-4 py-3 bg-slate-100 border border-slate-200 rounded-xl text-center font-bold text-base focus:outline-none focus:border-indigo-500">
+                    <p id="name-validation-error" class="hidden text-xs text-red-500 font-bold">名字と名前の間にスペースを空けてください</p>
                 </div>
-                <button onclick="submitName()" class="bg-indigo-600 hover:bg-indigo-700 text-white w-full py-4 rounded-xl font-bold text-lg shadow-md transition-colors flex items-center justify-center">
+                <button onclick="submitName()" class="bg-indigo-600 text-white w-full py-3.5 rounded-2xl font-bold shadow-md">
                     スタンプラリーを開始する
                 </button>
             </div>
         </div>
 
         <!-- ボトムナビゲーション -->
-        <nav class="bg-white border-t border-slate-200 flex justify-around px-2 pt-2 z-50 shrink-0 pb-safe shadow-[0_-4px_10px_rgba(0,0,0,0.03)] absolute bottom-0 w-full">
-            <button onclick="switchTab('scan')" id="nav-scan" class="nav-btn flex flex-col items-center w-1/3 py-2 text-indigo-600 transition-colors">
-                <div class="p-1 rounded-xl mb-1 transition-colors group-hover:bg-indigo-50" id="nav-icon-bg-scan"><i data-lucide="scan" class="w-6 h-6"></i></div>
+        <nav class="bg-white border-t border-slate-200 flex justify-around px-2 pt-2 z-50 shrink-0 pb-safe absolute bottom-0 w-full">
+            <button onclick="switchTab('scan')" id="nav-scan" class="nav-btn flex flex-col items-center w-1/3 py-2 text-indigo-600">
+                <div class="p-1 rounded-xl mb-1" id="nav-icon-bg-scan"><i data-lucide="scan" class="w-6 h-6"></i></div>
                 <span class="text-[10px] font-bold">ミッション</span>
             </button>
-            <button onclick="switchTab('stamps')" id="nav-stamps" class="nav-btn flex flex-col items-center w-1/3 py-2 text-slate-400 transition-colors relative">
-                <div class="p-1 rounded-xl mb-1 transition-colors" id="nav-icon-bg-stamps"><i data-lucide="map" class="w-6 h-6"></i></div>
-                <span id="nav-stamp-badge" class="hidden absolute top-1 right-[28%] bg-red-500 text-white text-[9px] font-bold px-1.5 rounded-full shadow-sm ring-2 ring-white">0</span>
+            <button onclick="switchTab('stamps')" id="nav-stamps" class="nav-btn flex flex-col items-center w-1/3 py-2 text-slate-400 relative">
+                <div class="p-1 rounded-xl mb-1" id="nav-icon-bg-stamps"><i data-lucide="map" class="w-6 h-6"></i></div>
+                <span id="nav-stamp-badge" class="hidden absolute top-1 right-[28%] bg-red-500 text-white text-[9px] font-bold px-1.5 rounded-full">0</span>
                 <span class="text-[10px] font-bold">スタンプ帳</span>
             </button>
-            <button onclick="switchTab('ticket')" id="nav-ticket" class="nav-btn flex flex-col items-center w-1/3 py-2 text-slate-400 transition-colors relative">
-                <div class="p-1 rounded-xl mb-1 transition-colors" id="nav-icon-bg-ticket"><i data-lucide="ticket" class="w-6 h-6"></i></div>
-                <span id="nav-ticket-ping" class="hidden absolute top-2 right-[30%] flex h-3 w-3">
+            <button onclick="switchTab('ticket')" id="nav-ticket" class="nav-btn flex flex-col items-center w-1/3 py-2 text-slate-400 relative">
+                <div class="p-1 rounded-xl mb-1" id="nav-icon-bg-ticket"><i data-lucide="ticket" class="w-6 h-6"></i></div>
+                <span id="nav-ticket-ping" class="hidden absolute top-2 right-[30%] flex h-2.5 w-2.5">
                     <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                    <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500 border-2 border-white"></span>
+                    <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
                 </span>
                 <span class="text-[10px] font-bold">特典</span>
             </button>
         </nav>
     </div>
-
-    <!-- 隠しQRリーダ領域 -->
-    <div id="qr-reader-hidden" style="position: absolute; top: -9999px; left: -9999px; width: 300px; height: 300px; opacity: 0; pointer-events: none;"></div>
 
     <script>
         const GAS_API_URL = "https://script.google.com/macros/s/AKfycbw1jPhVdaKLAvmzqCB-fozTGuCrrFb0sw0gN92kt71bs-B9LHa59nO2Dq_nyko-5sUP/exec"; 
@@ -293,11 +271,11 @@
             if (isChecked) {
                 btn.disabled = false;
                 btn.classList.remove('bg-slate-300', 'text-slate-500', 'cursor-not-allowed');
-                btn.classList.add('bg-indigo-600', 'text-white', 'hover:bg-indigo-700', 'shadow-md');
+                btn.classList.add('bg-indigo-600', 'text-white');
             } else {
                 btn.disabled = true;
                 btn.classList.add('bg-slate-300', 'text-slate-500', 'cursor-not-allowed');
-                btn.classList.remove('bg-indigo-600', 'text-white', 'hover:bg-indigo-700', 'shadow-md');
+                btn.classList.remove('bg-indigo-600', 'text-white');
             }
         }
 
@@ -314,16 +292,14 @@
                 const m = String(now.getMinutes()).padStart(2, '0');
                 const s = String(now.getSeconds()).padStart(2, '0');
                 const clockEl = document.getElementById('current-time');
-                if (clockEl) {
-                    clockEl.textContent = `${h}:${m}:${s}`;
-                }
+                if (clockEl) clockEl.textContent = `${h}:${m}:${s}`;
             }
             updateClock(); 
             setInterval(updateClock, 1000);
         }
 
         function resetTestData() {
-            if (confirm("これまでのスタンプ記録やお名前のデータをすべて消去して、最初からやり直しますか？")) {
+            if (confirm("これまでの記録を消去して、最初からやり直しますか？")) {
                 localStorage.removeItem('ichijo_festival_stamps');
                 localStorage.removeItem('ichijo_festival_user_name');
                 localStorage.removeItem('ichijo_festival_ticket_used');
@@ -337,20 +313,16 @@
             const input = document.getElementById('fullname-input');
             const nameValue = input.value.trim();
             const errorElement = document.getElementById('name-validation-error');
-            
             const hasSpace = nameValue.includes(' ') || nameValue.includes(' ');
             
             if (nameValue.length < 2 || !hasSpace) {
                 errorElement.classList.remove('hidden');
-                if (window.lucide) lucide.createIcons();
                 return;
             }
             
             errorElement.classList.add('hidden');
             userName = nameValue;
-            
             localStorage.setItem('ichijo_festival_user_name', userName);
-            
             document.getElementById('name-input-modal').classList.add('hidden');
             completeInit();
         }
@@ -372,15 +344,10 @@
             
             const stampsA = stamps.filter(id => id <= 7).length;
             const stampsB = stamps.filter(id => id >= 8).length;
-
             let candidateSpots = [];
             
-            if (stampsA < 4) {
-                candidateSpots = candidateSpots.concat(SPOTS.filter(s => s.id <= 7 && !stamps.includes(s.id)));
-            }
-            if (stampsB < 1) {
-                candidateSpots = candidateSpots.concat(SPOTS.filter(s => s.id >= 8 && !stamps.includes(s.id)));
-            }
+            if (stampsA < 4) candidateSpots = candidateSpots.concat(SPOTS.filter(s => s.id <= 7 && !stamps.includes(s.id)));
+            if (stampsB < 1) candidateSpots = candidateSpots.concat(SPOTS.filter(s => s.id >= 8 && !stamps.includes(s.id)));
             
             if (candidateSpots.length === 0) {
                 isDrawing = false;
@@ -389,10 +356,9 @@
             }
             
             const finalSpot = candidateSpots[Math.floor(Math.random() * candidateSpots.length)];
-
             const display = document.getElementById('lottery-display');
-            display.classList.remove('text-indigo-300', 'text-3xl');
-            display.classList.add('text-indigo-600', 'text-2xl', 'animate-pulse');
+            display.classList.remove('text-indigo-300');
+            display.classList.add('text-indigo-600', 'animate-pulse');
 
             let count = 0;
             const interval = setInterval(() => {
@@ -421,10 +387,10 @@
 
             if (stamps.length >= 5) {
                 section.innerHTML = `
-                    <div class="bg-yellow-50 border-4 border-yellow-200 w-full p-6 rounded-3xl flex flex-col items-center justify-center shadow-inner text-center">
-                        <i data-lucide="award" class="w-16 h-16 text-yellow-500 mb-2"></i>
-                        <span class="text-xl font-black text-yellow-700">目標の5箇所をコンプリート！</span>
-                        <span class="text-sm text-yellow-600 font-bold mt-2">特典画面から割引券をご利用ください</span>
+                    <div class="bg-white border-4 border-amber-300 w-full p-6 rounded-[2rem] flex flex-col items-center justify-center text-center shadow-sm">
+                        <i data-lucide="award" class="w-16 h-16 text-amber-500 mb-2"></i>
+                        <span class="text-xl font-bold text-slate-800">5箇所コンプリート！</span>
+                        <span class="text-xs text-slate-500 mt-2">特典画面から割引券をご利用ください</span>
                     </div>
                 `;
                 if (window.lucide) lucide.createIcons();
@@ -436,7 +402,7 @@
                 const stampsB = stamps.filter(id => id >= 8).length;
                 
                 section.innerHTML = `
-                    <div class="w-full flex justify-around mb-4 bg-white p-3 rounded-2xl shadow-sm border border-slate-100">
+                    <div class="w-full flex justify-around mb-6 bg-white p-3 rounded-2xl border border-slate-200">
                         <div class="text-center">
                             <p class="text-[10px] text-slate-400 font-bold">アトラクション</p>
                             <p class="text-sm font-black text-indigo-600">${stampsA} / 4</p>
@@ -447,34 +413,45 @@
                             <p class="text-sm font-black text-rose-500">${stampsB} / 1</p>
                         </div>
                     </div>
-                    <h2 class="text-xl font-bold text-indigo-900 mb-2">次の目的地を決める</h2>
-                    <p class="text-xs text-slate-500 text-center mb-6">くじ引きで出たクラスに行って<br/>スタンプを集めてください！</p>
-                    <div id="lottery-display" class="bg-white border-4 border-indigo-200 w-full h-24 rounded-2xl flex items-center justify-center text-3xl font-black text-indigo-300 mb-6 shadow-inner tracking-widest">
+                    
+                    <div id="lottery-display" class="bg-white border-4 border-indigo-400 w-full h-32 rounded-[2rem] flex items-center justify-center text-3xl font-black text-indigo-300 mb-6 tracking-widest shadow-sm">
                         ？？？
                     </div>
-                    <button onclick="drawLottery()" class="w-full py-4 bg-rose-500 hover:bg-rose-600 text-white rounded-xl font-bold text-xl shadow-lg transition-all animate-pulse-soft flex items-center justify-center border-b-4 border-rose-700 active:translate-y-1 active:border-b-0">
-                        <i data-lucide="dices" class="w-6 h-6 mr-2"></i>くじを引く！
+                    
+                    <button onclick="drawLottery()" class="w-full py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-bold text-lg shadow-md transition-all flex items-center justify-center">
+                        <i data-lucide="dices" class="w-5 h-5 mr-2"></i>くじを引く！
                     </button>
                 `;
             } else {
                 const target = SPOTS.find(s => s.id === currentTargetId);
                 if (target) {
                     section.innerHTML = `
-                        <h2 class="text-xl font-bold text-indigo-900 mb-2">次の目的地</h2>
-                        <div class="bg-white border-4 border-rose-500 w-full p-6 rounded-2xl mb-6 shadow-md text-center">
-                            <span class="inline-block bg-indigo-100 text-indigo-800 text-[10px] font-bold px-2 py-1 rounded-full mb-2">${target.type}</span>
-                            <p class="text-3xl font-black text-indigo-700 tracking-wider">${target.name}</p>
-                            <p class="text-sm font-bold text-slate-600 mt-1">${target.label}</p>
-                            <div class="mt-4 pt-4 border-t border-slate-100 text-left">
-                                <p class="text-[10px] text-slate-400 font-bold mb-1">ミッション：</p>
-                                <p class="text-xs text-slate-700 font-bold">${target.mission}</p>
+                        <!-- 画像通り：カードデザイン (白背景 + 濃い青紫色の太枠 + 角丸) -->
+                        <div class="bg-white border-[3.5px] border-indigo-500 w-full p-6 rounded-[2rem] mb-6 text-center shadow-sm">
+                            <div class="inline-block bg-indigo-100 text-indigo-700 text-xs font-bold px-4 py-1.5 rounded-full mb-3">
+                                ${target.type}
+                            </div>
+                            <h2 class="text-4xl font-black text-indigo-700 tracking-wide mb-1">${target.name}</h2>
+                            <p class="text-lg font-bold text-slate-600 mb-5">${target.label}</p>
+                            
+                            <div class="w-full border-t border-slate-100 pt-4 text-left">
+                                <p class="text-xs font-bold text-slate-400 mb-1">ミッション :</p>
+                                <p class="text-sm font-bold text-slate-800 leading-relaxed">${target.mission}</p>
                             </div>
                         </div>
-                        <p class="text-xs text-slate-500 mb-4 font-bold text-center">目的地に着いたらカメラを起動して<br>スタッフが持つQRコードを読み取ってね！</p>
-                        <button onclick="startScanner()" class="w-full bg-rose-500 hover:bg-rose-600 text-white py-4 rounded-xl font-bold text-lg shadow-lg transition-all flex items-center justify-center animate-pulse-soft border-b-4 border-rose-700 active:translate-y-1 active:border-b-0">
+
+                        <!-- カード下の案内文章 -->
+                        <p class="text-xs text-slate-500 font-bold text-center leading-relaxed mb-6">
+                            目的地に着いたらカメラを起動して<br>スタッフが持つQRコードを読み取ってね！
+                        </p>
+
+                        <!-- 青色ボタン -->
+                        <button onclick="startScanner()" class="w-full bg-[#4f46e5] hover:bg-indigo-700 text-white py-4 px-6 rounded-2xl font-bold text-base shadow-md transition-all flex items-center justify-center">
                             <i data-lucide="camera" class="w-6 h-6 mr-2"></i>カメラを起動してQRを読み取る
                         </button>
-                        <button onclick="cancelTarget()" class="w-full mt-4 text-xs text-slate-400 hover:text-slate-600 underline">
+
+                        <!-- 下部リンク -->
+                        <button onclick="cancelTarget()" class="mt-4 text-xs font-bold text-slate-400 hover:text-slate-600 underline">
                             違うくじを引き直す
                         </button>
                     `;
@@ -535,7 +512,7 @@
                     handleStampSuccess(spot);
                 }
             } else {
-                alert("文化祭用の正しいQRコードではありません。");
+                alert("正しいQRコードではありません。");
                 isProcessing = false;
             }
         }
@@ -571,7 +548,7 @@
                     setTimeout(() => {
                         closeResultModal();
                         switchTab('ticket');
-                    }, 2500);
+                    }, 2200);
                 }
             }
             isProcessing = false;
@@ -625,29 +602,29 @@
                 const isTarget = currentTargetId === spot.id;
                 
                 let statusBadge = '';
-                let opacityClass = 'opacity-50 grayscale';
+                let opacityClass = 'opacity-50 border-slate-200 bg-white';
                 let iconColor = 'text-slate-300';
                 
                 if (isGot) {
-                    statusBadge = `<span class="bg-red-500 text-white text-[10px] font-bold px-2 py-1 rounded-full shadow-sm">獲得済</span>`;
-                    opacityClass = 'opacity-100 bg-white border-red-200 border-2 shadow-sm';
-                    iconColor = 'text-red-500';
+                    statusBadge = `<span class="bg-rose-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">獲得済</span>`;
+                    opacityClass = 'opacity-100 bg-white border-rose-300 border shadow-sm';
+                    iconColor = 'text-rose-500';
                 } else if (isTarget) {
-                    statusBadge = `<span class="bg-indigo-600 text-white text-[10px] font-bold px-2 py-1 rounded-full shadow-sm animate-pulse">目的地</span>`;
-                    opacityClass = 'opacity-100 bg-indigo-50 border-indigo-300 border-2 shadow-md';
+                    statusBadge = `<span class="bg-indigo-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full animate-pulse">目的地</span>`;
+                    opacityClass = 'opacity-100 bg-indigo-50/50 border-indigo-400 border-2 shadow-sm';
                     iconColor = 'text-indigo-600';
                 } else {
-                    opacityClass = 'opacity-60 bg-slate-50 border-slate-200 border';
+                    opacityClass = 'opacity-60 bg-white border-slate-200 border';
                 }
                 
                 container.innerHTML += `
-                    <div class="flex items-center p-3 rounded-2xl ${opacityClass} transition-all relative overflow-hidden">
-                        <div class="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mr-4 shrink-0 shadow-inner">
-                            <i data-lucide="${isGot ? 'check-circle' : 'map-pin'}" class="w-6 h-6 ${iconColor}"></i>
+                    <div class="flex items-center p-3 rounded-2xl ${opacityClass} transition-all">
+                        <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center mr-3 shrink-0">
+                            <i data-lucide="${isGot ? 'check-circle' : 'map-pin'}" class="w-5 h-5 ${iconColor}"></i>
                         </div>
                         <div class="flex-1 min-w-0">
-                            <div class="flex items-center justify-between mb-1">
-                                <h3 class="font-bold text-slate-800 truncate pr-2">${spot.name}</h3>
+                            <div class="flex items-center justify-between mb-0.5">
+                                <h3 class="font-bold text-slate-800 text-sm truncate pr-2">${spot.name}</h3>
                                 ${statusBadge}
                             </div>
                             <p class="text-[10px] text-slate-500 truncate">${spot.label}</p>
@@ -669,18 +646,18 @@
                 if (ticketUsed) {
                     instruction.innerHTML = "この特典は利用済みです。<br>もう一度最初から遊ぶことができます！";
                     actionArea.innerHTML = `
-                        <div class="bg-slate-200 text-slate-500 py-3 rounded-xl font-bold flex items-center justify-center border-2 border-slate-300 mb-4">
-                            <i data-lucide="check-circle" class="w-5 h-5 mr-2"></i>利用済み
+                        <div class="bg-slate-100 text-slate-500 py-3 rounded-2xl font-bold flex items-center justify-center mb-3">
+                            <i data-lucide="check-circle" class="w-5 h-5 mr-1.5"></i>利用済み
                         </div>
-                        <button onclick="startNextLap()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-4 rounded-xl font-bold shadow-lg transition-colors flex items-center justify-center text-lg animate-pulse-soft border-b-4 border-indigo-800 active:translate-y-1 active:border-b-0">
-                            <i data-lucide="refresh-cw" class="w-6 h-6 mr-2"></i>${lapCount + 1}周目に挑戦する！
+                        <button onclick="startNextLap()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3.5 rounded-2xl font-bold shadow-md flex items-center justify-center text-base">
+                            <i data-lucide="refresh-cw" class="w-5 h-5 mr-2"></i>${lapCount + 1}周目に挑戦する！
                         </button>
                     `;
                 } else {
                     instruction.innerHTML = "生徒会本部または景品交換所でこの画面を提示し、<br/>スタッフの前で「利用する」ボタンを押してください。";
                     actionArea.innerHTML = `
-                        <button onclick="useTicket()" class="w-full bg-red-500 hover:bg-red-600 text-white py-4 rounded-xl font-bold shadow-lg transition-colors flex items-center justify-center text-lg animate-pulse-soft border-b-4 border-red-700 active:translate-y-1 active:border-b-0">
-                            <i data-lucide="ticket" class="w-6 h-6 mr-2"></i>特典を利用する
+                        <button onclick="useTicket()" class="w-full bg-rose-500 hover:bg-rose-600 text-white py-4 rounded-2xl font-bold shadow-md flex items-center justify-center text-lg">
+                            <i data-lucide="ticket" class="w-5 h-5 mr-2"></i>特典を利用する
                         </button>
                     `;
                 }
@@ -704,14 +681,12 @@
             
             if (type === 'success') {
                 title.textContent = "スタンプ獲得！";
-                title.className = "text-2xl font-black text-rose-600 mb-2";
-                desc.innerHTML = `<span class="font-bold text-lg text-slate-800">${spot.name}</span><br>のスタンプをゲットしました！`;
+                desc.innerHTML = `<span class="font-bold text-base text-slate-800">${spot.name}</span><br>のスタンプをゲットしました！`;
                 statusBox.className = "p-3 rounded-xl font-bold flex items-center justify-center mb-6 bg-rose-50 text-rose-600 border border-rose-200";
                 statusIcon.setAttribute('data-lucide', 'check-circle');
                 statusText.textContent = "ミッションクリア！";
             } else if (type === 'wrong_target') {
                 title.textContent = "ちがう場所です！";
-                title.className = "text-2xl font-black text-amber-600 mb-2";
                 desc.innerHTML = `ここは <span class="font-bold">${spot.name}</span> です。<br>くじ引きで決まった目的地に行ってください！`;
                 statusBox.className = "p-3 rounded-xl font-bold flex items-center justify-center mb-6 bg-amber-50 text-amber-600 border border-amber-200";
                 statusIcon.setAttribute('data-lucide', 'alert-triangle');
